@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.brulioreadyy.mimo",
+      "sha256_cert_fingerprints": [
+        "56:CE:C6:17:48:41:1E:9C:EB:44:5D:76:D4:89:88:FC:57:9B:AC:76:6D:E6:6C:6B:47:6A:19:AD:BD:83:30:E1"
+      ]
+    }
+  }
+]
