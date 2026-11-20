@@ -9,6 +9,20 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Mimo – Agenda de belleza</title>
+<meta name="description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas y peluquería.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mimo">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Mimo · Agenda de belleza con reservas en línea">
+<meta property="og:description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas y peluquería.">
+<meta property="og:image" content="https://mimo-cl.github.io/og.jpg">
+<meta property="og:image:secure_url" content="https://mimo-cl.github.io/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Reserva tu hora aquí: uñas, pestañas y peluquería">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mimo-cl.github.io/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,500&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -413,11 +427,11 @@ function compartirHTML(){
    <a class="sbtn" style="color:#1fa855" href="https://wa.me/?text=${encodeURIComponent(msg+LK)}" target="_blank" rel="noopener">${sic('wa')}WhatsApp</a>
    <a class="sbtn" style="color:#2aa3df" href="https://t.me/share/url?url=${u}&text=${encodeURIComponent('Reserva tu hora en '+n)}" target="_blank" rel="noopener">${sic('tg')}Telegram</a>
    <a class="sbtn" style="color:#1877f2" href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">${sic('fb')}Facebook</a>
-   <button class="sbtn" style="color:#d6297b" onclick="copiarEnlace(igInfo)">${sic('ig')}Instagram</button>
+   <button class="sbtn" style="color:#d6297b" onclick="instaHistoria()">${sic('ig')}Instagram</button>
    <a class="sbtn" href="${esc(LK)}" target="_blank" rel="noopener">${sic('link')}Probar</a>
   </div>
   <button class="ghost" style="width:100%;margin-bottom:12px" onclick="guiaRedes()">Cómo ponerlo en cada red (botón "Reserva aquí")</button>
-  <div style="text-align:center"><div id="qr" style="display:inline-block;background:#fff;padding:12px;border-radius:12px;min-height:40px"></div><p class="muted" style="margin-top:6px">Código QR para el local o tus historias: sácale pantallazo.</p></div>
+  <div style="text-align:center"><div id="qr" style="display:inline-block;background:#fff;padding:12px;border-radius:12px;min-height:40px"></div><div class="row" style="justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="sm" onclick="compartirImagen('post')">Compartir QR</button><button class="ghost sm" onclick="guardarQR()">Guardar imagen</button></div><p class="muted" style="margin-top:6px">Imagen lista con tu nombre y QR para Instagram, Facebook, WhatsApp o para imprimir en tu local.</p></div>
   <p class="muted">Si cambias servicios, precios u horario, tu enlace se actualiza solo.</p></div>`;
 }
 let qrCargando=false;
@@ -438,6 +452,71 @@ function igInfo(ok){document.getElementById('sheetIn').innerHTML=`<h3>Compartir 
   <div class="card"><b>En tu perfil</b><div class="muted">Editar perfil → Enlaces → Agregar enlace</div></div>
   <div class="card"><b>En una historia</b><div class="muted">Sticker "Enlace" y pegas</div></div>
   <div class="card"><b>Con el QR</b><div class="muted">Sube el pantallazo del código</div></div>
+  <button style="width:100%" onclick="closeSheet()">Entendido</button>`;openSheet()}
+
+// ---------- Imágenes para redes (historia de Instagram y QR) ----------
+function cargarImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src})}
+async function qrCanvas(txt,size){
+  if(!window.QRCode){pintarQR();await new Promise(r=>{let n=0;const t=setInterval(()=>{if(window.QRCode||++n>40){clearInterval(t);r()}},150)})}
+  if(!window.QRCode)throw new Error('qr');
+  const d=document.createElement('div');new window.QRCode(d,{text:txt,width:size,height:size,colorDark:'#4a3a4f',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.M});
+  return d.querySelector('canvas')}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function florC(c,x,y,r,col){c.save();c.translate(x,y);c.fillStyle=col;for(let k=0;k<5;k++){const a=k*2*Math.PI/5-Math.PI/2;c.beginPath();c.arc(Math.cos(a)*r*.55,Math.sin(a)*r*.55,r*.5,0,7);c.fill()}c.fillStyle='#fff';c.beginPath();c.arc(0,0,r*.24,0,7);c.fill();c.restore()}
+let imgCache={};
+async function imagenRedes(tipo){
+  const W=1080,H=tipo==='historia'?1920:1350,hist=tipo==='historia';
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  try{await document.fonts.ready}catch(e){}
+  const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'#d6ecfa');g.addColorStop(.5,'#fbf3f8');g.addColorStop(1,'#fbd3e4');c.fillStyle=g;c.fillRect(0,0,W,H);
+  for(const[x,y,r,col]of[[0,0,560,'rgba(191,224,246,.9)'],[W,H,700,'rgba(247,188,213,.9)'],[W*.8,H*.3,300,'rgba(255,255,255,.7)']]){const rg=c.createRadialGradient(x,y,0,x,y,r);rg.addColorStop(0,col);rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.fillRect(0,0,W,H)}
+  c.fillStyle='rgba(212,108,155,.12)';for(let y=24;y<H;y+=36)for(let x=24;x<W;x+=36){c.beginPath();c.arc(x,y,2.4,0,7);c.fill()}
+  florC(c,W-140,hist?230:150,92,'rgba(247,188,213,.95)');florC(c,120,H-(hist?260:190),74,'rgba(191,224,246,.95)');florC(c,90,hist?520:400,40,'rgba(247,188,213,.7)');
+  c.textAlign='center';c.fillStyle='#fff';c.shadowColor='rgba(212,108,155,.6)';c.shadowBlur=20;c.font='64px sans-serif';c.fillText('✦',W-120,H-(hist?420:330));c.font='40px sans-serif';c.fillText('✦',200,hist?220:150);c.shadowBlur=0;
+  const n=st.negocio.nombre||'Mi salón',ser="'Playfair Display',Lora,Georgia,serif",san="Quicksand,Poppins,system-ui,sans-serif",LK=enlaceReserva();
+  let y=hist?250:150;
+  try{const lg=await cargarImg('icon-192.png');c.save();c.shadowColor='rgba(212,108,155,.4)';c.shadowBlur=30;c.shadowOffsetY=10;rr(c,W/2-64,y-64,128,128,38);c.fillStyle='#fff';c.fill();c.restore();c.save();rr(c,W/2-64,y-64,128,128,38);c.clip();c.drawImage(lg,W/2-64,y-64,128,128);c.restore()}catch(e){}
+  y+=150;
+  let fs=110;c.font=`700 ${fs}px ${ser}`;while(c.measureText(n).width>W-140&&fs>48){fs-=4;c.font=`700 ${fs}px ${ser}`}
+  c.fillStyle='#c2558a';c.fillText(n,W/2,y);y+=86;
+  c.fillStyle='#6c5a72';c.font=`700 50px ${san}`;c.fillText('Reserva tu hora aquí ✨',W/2,y);y+=58;
+  const rub=(st.negocio.rubros||[]).map(r=>({unas:'💅 Uñas',pestanas:'👁️ Pestañas',pelo:'💇‍♀️ Peluquería'}[r])).filter(Boolean).join('   ·   ');
+  if(rub){c.fillStyle='#a14d78';c.font=`600 34px ${san}`;c.fillText(rub,W/2,y+12);y+=40}
+  const qs=hist?520:480,cw=qs+90,cx=W/2-cw/2,cy=y+44;
+  c.save();c.shadowColor='rgba(160,70,120,.32)';c.shadowBlur=70;c.shadowOffsetY=28;c.fillStyle='#fff';rr(c,cx,cy,cw,cw,64);c.fill();c.restore();
+  const q=await qrCanvas(LK,qs);c.imageSmoothingEnabled=false;c.drawImage(q,cx+45,cy+45,qs,qs);c.imageSmoothingEnabled=true;
+  y=cy+cw+86;
+  c.fillStyle='#a14d78';c.font=`700 42px ${san}`;c.fillText(hist?'📷 Escanea o toca el enlace 👇':'📷 Escanea con tu cámara',W/2,y);y+=56;
+  c.fillStyle='#8a7a8f';c.font=`600 30px ${san}`;let lk=LK.replace(/^https?:\/\//,'');c.fillText(lk,W/2,y);
+  c.fillStyle='rgba(154,138,159,.95)';c.font=`600 28px ${san}`;c.fillText('Reservas en línea con Mimo',W/2,H-(hist?130:60));
+  return await new Promise(ok=>cv.toBlob(ok,'image/png'))}
+async function compartirImagen(tipo){
+  toast('Preparando imagen…');let blob;
+  try{blob=imgCache[tipo+LK2()]||(imgCache[tipo+LK2()]=await imagenRedes(tipo))}catch(e){toast('Necesitas internet para crear la imagen');return 'error'}
+  const nombre=(tipo==='historia'?'historia-':'qr-')+(L.codigo||'mimo')+'.png',f=new File([blob],nombre,{type:'image/png'});
+  const data=tipo==='historia'?{files:[f]}:{files:[f],text:'✨ Reserva tu hora en '+(st.negocio.nombre||'mi salón')+' 👉 '+enlaceReserva()};
+  if(navigator.canShare&&navigator.canShare({files:[f]})){
+    try{await navigator.share(data);return 'ok'}
+    catch(e){if(e&&e.name==='AbortError')return 'cancel';if(e&&e.name==='NotAllowedError'){volverACompartir(tipo);return 'retry'}}}
+  descargarBlob(blob,nombre);toast('Imagen guardada: súbela desde tu galería');return 'descarga'}
+function LK2(){return (L.codigo||'')+'|'+(st.negocio.nombre||'')+'|'+(st.negocio.rubros||[]).join()}
+function descargarBlob(blob,nombre){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nombre;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)}
+function volverACompartir(tipo){document.getElementById('sheetIn').innerHTML=`<h3>Tu imagen está lista</h3><p class="muted">Toca el botón para elegir dónde compartirla.</p><button class="btn" style="width:100%" onclick="closeSheet();compartirImagen('${tipo}')">Compartir imagen</button>`;openSheet()}
+async function guardarQR(){toast('Preparando imagen…');try{const b=imgCache['post'+LK2()]||(imgCache['post'+LK2()]=await imagenRedes('post'));descargarBlob(b,'qr-'+(L.codigo||'mimo')+'.png');toast('Imagen guardada')}catch(e){toast('Necesitas internet para crear la imagen')}}
+async function instaHistoria(){
+  let ok=false;try{await navigator.clipboard.writeText(enlaceReserva());ok=true}catch(e){}
+  document.getElementById('sheetIn').innerHTML=`<h3>Historia de Instagram</h3>
+  <p class="muted">${ok?'✓ Tu enlace ya está copiado.':'Copia tu enlace del cuadro (mantén presionado → Copiar).'} Te armamos una historia lista con tu nombre y tu QR:</p>
+  <div class="card"><b>1. Elige Instagram → "Historias"</b><div class="muted">En el menú que se abre al compartir.</div></div>
+  <div class="card"><b>2. Toca 🙂 Stickers → "Enlace" y pega</b><div class="muted">Mantén presionado el cuadro y "Pegar".</div></div>
+  <div class="card"><b>3. Cambia el texto del sticker a "Reserva aquí ✨"</b><div class="muted">Ponlo sobre "Escanea o toca el enlace" y publica.</div></div>
+  <button class="btn" style="width:100%;margin-bottom:8px" onclick="compartirImagen('historia')">${sic('ig')} Abrir de nuevo para compartir</button>
+  <button class="ghost" style="width:100%;margin-bottom:8px" onclick="igPerfil()">Ponerlo en mi perfil de Instagram</button>
+  <button class="ghost" style="width:100%" onclick="closeSheet()">Listo</button>`;openSheet();
+  const r=await compartirImagen('historia');
+  if(r==='descarga'){setTimeout(()=>{try{location.href='instagram://story-camera'}catch(e){}},900)}}
+function igPerfil(){document.getElementById('sheetIn').innerHTML=`<h3>En tu perfil de Instagram</h3><p class="muted">Así queda el botón de reservas siempre visible en tu perfil:</p>
+  <div class="card"><b>Editar perfil → Enlaces → Agregar enlace externo</b><div class="muted">Pega tu enlace (ya está copiado) y en título escribe "Reserva aquí ✨".</div></div>
   <button style="width:100%" onclick="closeSheet()">Entendido</button>`;openSheet()}
 
 // ---------- solicitudes que llegan por WhatsApp ----------

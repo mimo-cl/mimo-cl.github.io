@@ -1,5 +1,5 @@
 // Mimo: guarda la app en el celular para que funcione sin internet.
-const VERSION = 'mimo-v8';
+const VERSION = 'mimo-v9';
 const ARCHIVOS = ['./', './index.html', './reserva.html', './r.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png', './privacidad.html'];
 
