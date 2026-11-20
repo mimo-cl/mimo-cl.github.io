@@ -457,7 +457,7 @@ function igInfo(ok){document.getElementById('sheetIn').innerHTML=`<h3>Compartir 
 // ---------- Imágenes para redes (historia de Instagram y QR) ----------
 function cargarImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src})}
 async function qrCanvas(txt,size){
-  if(!window.QRCode){pintarQR();await new Promise(r=>{let n=0;const t=setInterval(()=>{if(window.QRCode||++n>40){clearInterval(t);r()}},150)})}
+  if(!window.QRCode){if(!document.getElementById('qrlib')){const sc=document.createElement('script');sc.id='qrlib';sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';document.head.appendChild(sc)}await new Promise(r=>{let n=0;const t=setInterval(()=>{if(window.QRCode||++n>40){clearInterval(t);r()}},150)})}
   if(!window.QRCode)throw new Error('qr');
   const d=document.createElement('div');new window.QRCode(d,{text:txt,width:size,height:size,colorDark:'#4a3a4f',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.M});
   return d.querySelector('canvas')}
