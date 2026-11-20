@@ -56,6 +56,16 @@ nav svg{width:22px;height:22px}
 .tag{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--soft);color:var(--plum);font-weight:700}
 .tag.warn{background:var(--warnbg);color:var(--warn)}
 .herr{display:flex;align-items:center;gap:12px}.herr-ic{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--acc),var(--plum2));color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;flex:none}.herr-tx{flex:1;min-width:0}.herr-tx small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.planes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 12px}
+.plan{position:relative;border:2px solid color-mix(in srgb,var(--plum) 18%,transparent);border-radius:20px;padding:16px 10px 12px;background:var(--card,#fff);text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.plan:active{transform:scale(.97)}
+.plan.on{border-color:var(--plum);background:linear-gradient(160deg,var(--soft),var(--card,#fff));box-shadow:0 8px 22px color-mix(in srgb,var(--plum) 28%,transparent)}
+.plan b{display:block;font-size:15px;color:var(--ink,#4a3a4f)}.plan .pr{font-size:21px;font-weight:800;color:var(--plum);margin-top:4px;letter-spacing:-.3px}
+.plan small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.plan .ah{color:var(--ok);font-weight:700}
+.plan .dto{position:absolute;top:-10px;right:10px;background:linear-gradient(135deg,var(--plum),var(--acc));color:#fff;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px;box-shadow:0 3px 8px color-mix(in srgb,var(--plum) 35%,transparent)}
+.plan .top{position:absolute;top:-10px;left:10px;background:#fff;color:var(--plum);border:1.5px solid var(--plum);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
+.suscribir{width:100%;font-size:16.5px;padding:16px;border-radius:999px;letter-spacing:.2px;box-shadow:0 10px 24px color-mix(in srgb,var(--plum) 35%,transparent);animation:brillo 2.6s ease-in-out infinite}
+@keyframes brillo{0%,100%{filter:brightness(1)}50%{filter:brightness(1.08)}}
 .tag.ok{background:var(--okbg);color:var(--ok)}
 .cita{display:flex;gap:12px;position:relative;overflow:hidden}
 .cita .hora{width:54px;flex:none;font-weight:700;color:var(--plum)}
@@ -573,17 +583,17 @@ function pedirNotif(){try{Notification.requestPermission().then(()=>render())}ca
 function waCobro(){const p=plan(),n=normTel(p.cobro);if(!n)return'';return wa(n,'Hola, quiero pagar mi plan de Mimo ('+clp(p.precio)+'/mes).\nNegocio: '+(st.negocio.nombre||'')+'\nNombre: '+(st.negocio.dueña||'')+'\nID: '+L.id)}
 function bannerPlan(){
   const p=plan();
-  if(p.estado==='prueba'&&p.dias>7)return`<div class="card" style="background:var(--soft);cursor:pointer;padding:10px 14px;font-size:13px" onclick="go('ajustes')">✦ Prueba gratis: te quedan <b>${p.dias} días</b>. Después ${clp(p.precio)} al mes.</div>`;
-  if(p.estado==='prueba'&&p.dias<=7)return`<div class="card" style="background:var(--soft);cursor:pointer" onclick="go('ajustes')">✦ ${p.dias===0?'Tu prueba gratis termina <b>hoy</b>':'Te quedan <b>'+p.dias+' día'+(p.dias===1?'':'s')+'</b> de prueba gratis'}. Toca para ver cómo seguir.</div>`;
-  if(p.estado==='vencido')return`<div class="card" style="background:var(--warnbg);cursor:pointer" onclick="go('ajustes')">Tu plan venció. Tienes <b>${p.quedaGracia} día${p.quedaGracia===1?'':'s'}</b> para pagar antes de que Mimo se pause.</div>`;
+  if(p.estado==='prueba'&&p.dias>7)return`<div class="card" style="background:var(--soft);cursor:pointer;padding:10px 14px;font-size:13px" onclick="abrirPlanes()"><div class="row between" style="gap:8px"><span>✦ Prueba gratis: te quedan <b>${p.dias} días</b></span><span class="tag" style="background:var(--plum);color:#fff">Suscribirme</span></div></div>`;
+  if(p.estado==='prueba'&&p.dias<=7)return`<div class="card" style="background:var(--soft);cursor:pointer" onclick="abrirPlanes()">✦ ${p.dias===0?'Tu prueba gratis termina <b>hoy</b>':'Te quedan <b>'+p.dias+' día'+(p.dias===1?'':'s')+'</b> de prueba gratis'}. Toca para elegir tu plan.</div>`;
+  if(p.estado==='vencido')return`<div class="card" style="background:var(--warnbg);cursor:pointer" onclick="abrirPlanes()">Tu plan venció. Tienes <b>${p.quedaGracia} día${p.quedaGracia===1?'':'s'}</b> para pagar antes de que Mimo se pause.</div>`;
   return'';
 }
 function planHTML(){
   const p=plan(),w=waCobro(),txt={prueba:'Prueba gratis',pagado:'Plan activo',vencido:'Vencido',bloqueado:'Pausado'}[p.estado];
   return`<div class="row between"><b style="font-size:20px;color:var(--plum)">${clp(p.precio)}<span class="muted" style="font-weight:500"> / mes</span></b><span class="tag ${p.estado==='pagado'?'ok':p.estado==='prueba'?'':'warn'}">${txt}</span></div>
   <p class="muted">${p.estado==='pagado'?'Pagado hasta el '+fechaLarga(p.hasta)+'.':p.estado==='prueba'?'Gratis hasta el '+fechaLarga(p.hasta)+'.':'Venció el '+fechaLarga(p.hasta)+'.'}</p>
-  <a class="btn" style="display:block;text-align:center;margin:10px 0" href="https://mpago.la/1dkyEa5" target="_blank" rel="noopener">Pagar ${clp(p.precio)} con Mercado Pago</a>
-  <div class="row" style="flex-wrap:wrap"><button class="sm" onclick="abrirPago()">Ya pagué</button><button class="ghost sm" onclick="verificar(true)">Revisar mi plan</button></div>
+  ${planesBox()}
+  <div class="row" style="flex-wrap:wrap;margin-top:12px"><button class="ghost sm" onclick="abrirPago()">Ya pagué y no se activó</button><button class="ghost sm" onclick="verificar(true)">Revisar mi plan</button></div>
   <p class="muted" style="margin-top:8px">Tu ID: ${esc(L.id)}</p>`;
 }
 function vBloqueo(){const p=plan();V(`<div class="welcome"><div class="big">${miLogo()}</div><h2 style="color:var(--plum)">Mimo está en pausa</h2><p class="muted">Tu plan venció el ${fechaLarga(p.hasta)}. Tus horas y clientas están guardadas: paga tu plan para seguir usándola.</p></div><div class="card">${planHTML()}</div>`)}
@@ -698,6 +708,26 @@ let confirmSvc=false;
 function borrarSvc(){if(!confirmSvc){confirmSvc=true;toast('Toca otra vez para eliminar');setTimeout(()=>confirmSvc=false,3000);return}
   st.servicios=st.servicios.filter(x=>x.id!==ed.id);st.catalogo=st.catalogo.filter(d=>d.servicioId!==ed.id);save();closeSheet();render();toast('Servicio eliminado')}
 
+// ---------- Planes de suscripción ----------
+const PLANES=[[1,0],[3,.10],[6,.15],[12,.20]];
+let planSel=12;
+function precioPlan(m){const p=plan().precio||4990,d=(PLANES.find(x=>x[0]===m)||[0,0])[1];return Math.round(p*m*(1-d)/10)*10}
+function nombrePlan(m){return m===1?'1 mes':m===12?'1 año':m+' meses'}
+function planesBox(){const p=plan().precio||4990;
+ return`<div id="planesBox"><div class="planes">${PLANES.map(([m,d])=>{const t=precioPlan(m);return`<div class="plan ${planSel===m?'on':''}" onclick="elegirPlan(${m})">${d?`<span class="dto">-${Math.round(d*100)}%</span>`:''}${m===12?'<span class="top">★ Mejor precio</span>':''}<b>${nombrePlan(m)}</b><div class="pr">${clp(t)}</div><small>${m===1?'cada mes':clp(Math.round(t/m))+' al mes'}</small>${d?`<small class="ah">Ahorras ${clp(p*m-t)}</small>`:''}</div>`}).join('')}</div>
+ <button class="btn suscribir" onclick="pagarPlan(planSel)">✦ Suscribirme · ${clp(precioPlan(planSel))}</button>
+ <p class="muted" style="text-align:center;margin:8px 0 0;font-size:12px">🔒 Pago seguro con Mercado Pago · tu plan se activa solo</p></div>`}
+function elegirPlan(m){planSel=m;const b=document.getElementById('planesBox');if(b)b.outerHTML=planesBox()}
+function abrirPlanes(){document.getElementById('sheetIn').innerHTML=`<div class="row between"><h3>Elige tu plan</h3><button class="ghost sm" onclick="closeSheet()">Cerrar</button></div><p class="muted">Mientras más meses, más ahorras. Sin contratos: cuando termina, eliges de nuevo.</p>${planesBox()}`;openSheet()}
+async function pagarPlan(m){if(!navigator.onLine)return toast('Necesitas internet para pagar');toast('Abriendo Mercado Pago…');
+ try{const j=await postAPI({accion:'checkout',id:L.id,meses:m});if(j.ok&&j.url){L.pagoPend=Date.now();saveL();location.href=j.url;return}
+  if(j.error==='sin-registro'){await verificar();const k=await postAPI({accion:'checkout',id:L.id,meses:m});if(k.ok&&k.url){location.href=k.url;return}}}catch(e){}
+ if(m===1){window.open('https://mpago.la/1dkyEa5','_blank')}else toast('No se pudo abrir el pago, intenta de nuevo')}
+function revisarRetornoPago(){const q=new URLSearchParams(location.search).get('pago');if(!q)return;try{history.replaceState(null,'',location.pathname)}catch(e){}
+ if(q==='error'){toast('El pago no se completó. Puedes intentarlo de nuevo.');return}
+ toast(q==='ok'?'¡Pago recibido! Activando tu plan…':'Tu pago está en revisión, te avisamos al activarse');let n=0;
+ const t=setInterval(async()=>{n++;try{await verificar()}catch(e){}if(plan().estado==='pagado'||n>8){clearInterval(t);render();if(plan().estado==='pagado')toast('✦ ¡Plan activo! Gracias por confiar en Mimo')}},5000)}
+
 // ---------- Pago con Mercado Pago ----------
 function abrirPago(){document.getElementById('sheetIn').innerHTML=`<div class="row between"><h3>Ya pagué</h3><button class="ghost sm" onclick="closeSheet()">Cerrar</button></div>
  <p class="muted">Escribe el <b>número de operación</b> de tu pago. Lo encuentras en el comprobante de Mercado Pago (en la app: Actividad → tu pago → "N° de operación").</p>
@@ -791,6 +821,7 @@ window.androidBack=function(){const sh=document.getElementById('sheet');if(sh.cl
 render();
 revisarHash();
 verificar();
+revisarRetornoPago();
 setTimeout(()=>{if(!L.respaldo||Date.now()-L.respaldo>864e5)respaldar()},8000);
 cargarFotos().then(()=>{if(tab==='catalogo'||tab==='agenda')render()});
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
