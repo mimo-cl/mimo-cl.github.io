@@ -80,6 +80,20 @@ nav svg{width:22px;height:22px}
 .plan .top{position:absolute;top:-10px;left:10px;background:#fff;color:var(--plum);border:1.5px solid var(--plum);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
 .suscribir{width:100%;font-size:16.5px;padding:16px;border-radius:999px;letter-spacing:.2px;box-shadow:0 10px 24px color-mix(in srgb,var(--plum) 35%,transparent);animation:brillo 2.6s ease-in-out infinite}
 @keyframes brillo{0%,100%{filter:brightness(1)}50%{filter:brightness(1.08)}}
+.tour{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;background:linear-gradient(160deg,#d6ecfa 0%,#fbf3f8 48%,#fbd3e4 100%);animation:tIn .3s ease}
+@keyframes tIn{from{opacity:0}to{opacity:1}}
+.tour .skip{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;background:rgba(255,255,255,.7);color:#8a7a8f;border:none;border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px}
+.tour .tb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 30px 10px}
+.tour .ti{width:150px;height:150px;border-radius:46px;display:grid;place-items:center;background:linear-gradient(135deg,#d46c9b,#e98fb7 60%,#9cc8e6);color:#fff;box-shadow:0 22px 44px -12px rgba(212,108,155,.55);margin-bottom:34px;position:relative;animation:tPop .45s cubic-bezier(.3,1.5,.5,1)}
+.tour .ti svg{width:74px;height:74px}
+.tour .ti:after{content:'✦';position:absolute;top:-14px;right:-12px;font-size:30px;color:#fff;text-shadow:0 0 14px rgba(212,108,155,.8)}
+@keyframes tPop{from{transform:scale(.6) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.tour h2{font-family:'Playfair Display',Georgia,serif;color:#c2558a;font-size:29px;margin:0 0 12px;line-height:1.15}
+.tour p{color:#6c5a72;font-size:16.5px;line-height:1.5;max-width:340px;margin:0}
+.tour .tip{margin-top:16px;background:rgba(255,255,255,.75);border:1.5px solid #f5cfe0;border-radius:16px;padding:10px 14px;font-size:14px;color:#a14d78;font-weight:600;max-width:340px}
+.tour .tf{padding:16px 24px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:18px}
+.tour .dots{display:flex;gap:7px}.tour .dots i{width:8px;height:8px;border-radius:99px;background:rgba(212,108,155,.25);transition:all .25s}.tour .dots i.on{width:24px;background:#d46c9b}
+.tour .tbtns{display:flex;gap:10px;width:100%;max-width:380px}.tour .tbtns button{flex:1;padding:15px;border-radius:999px;font-size:16px;font-weight:700}
 .tag.ok{background:var(--okbg);color:var(--ok)}
 .cita{display:flex;gap:12px;position:relative;overflow:hidden}
 .cita .hora{width:54px;flex:none;font-weight:700;color:var(--plum)}
@@ -580,7 +594,7 @@ function registrar(){const g=id=>(document.getElementById(id)||{}).value||'';con
   if(!N.nombre||N.nombre==='Mi salón')return toast('Escribe el nombre de tu negocio');if(!normTel(N.whatsapp))return toast('Revisa tu WhatsApp');
   N.registrado=true;save();render();verificar(true)}
 function empezar(){const N=st.negocio;if(!N.nombre||N.nombre==='Mi salón')return toast('Escribe el nombre de tu negocio');if(!normTel(N.whatsapp))return toast('Escribe tu WhatsApp');
-  N.bienvenida=false;N.registrado=true;save();go('agenda');verificar()}
+  N.bienvenida=false;N.registrado=true;save();go('agenda');verificar();if(!L.tour)setTimeout(abrirTour,300)}
 let verificando=false;
 async function verificar(manual){
   if(verificando||!st.negocio.registrado)return;verificando=true;
@@ -848,6 +862,29 @@ async function pedirPin(){const c=(document.getElementById('recC').value||'').tr
 async function usarPin(){const p=(document.getElementById('recP').value||'').trim();if(p.length!==6)return toast('El código tiene 6 números');
  try{const j=await postAPI({accion:'recuperar',correo:rec.correo,pin:p,app:'Mimo'});if(j.ok){aplicarRespaldo(JSON.parse(j.datos),j.id);closeSheet();toast('¡Tu agenda volvió!');go('agenda')}else toast(j.error==='pin'?'Código incorrecto':'El código venció, pide otro')}catch(e){toast('No se pudo recuperar')}}
 
+// ---------- Guía de inicio ----------
+const TOUR=[
+ ['<path d="M12 3l2.2 5.4L20 9l-4.4 3.8L17 19l-5-3-5 3 1.4-6.2L4 9l5.8-.6z"/>','Bienvenida a Mimo','Tu agenda de belleza en el bolsillo. En 1 minuto te mostramos cómo funciona.','Desliza o toca Siguiente 👉'],
+ [null,'servicios','1. Arma tus servicios','En <b>Servicios</b> eliges lo que haces: uñas, pestañas o peluquería, con su duración y precio. Crea los tuyos con el nombre que quieras.','💡 Lo que dura cada servicio bloquea esa hora en tu agenda.'],
+ [null,'reservar','2. Comparte tu enlace','En <b>Reservar</b> está tu enlace y tu QR. Ponlo en Instagram, WhatsApp o Facebook y tus clientas eligen día y hora solas.','💡 El botón de Instagram te arma una historia lista.'],
+ [null,'agenda','3. Todo llega a tu Agenda','Cada reserva aparece sola en tu <b>Agenda</b> y te avisamos por correo. También puedes agendar a mano con <b>+ Agendar hora</b>.','💡 Toca la fecha para ver cualquier día del mes.'],
+ [null,'catalogo','4. Muestra tus diseños','Sube fotos de tus trabajos al <b>Catálogo</b>. Tus clientas las ven al reservar y eligen su diseño.','💡 Puedes subir muchas fotos de una vez.'],
+ [null,'clientas','5. Cuida a tus clientas','En <b>Clientas</b> ves su historial y les avisas por WhatsApp cuando les toca el retoque.',''],
+ ['<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8S10.5 3 8 4s0 4 4 4zm0 0s1.5-5 4-4 0 4-4 4z"/>','30 días gratis 💖','Pruébalo todo sin pagar. Después $4.990 al mes, o menos con los planes de 3, 6 o 12 meses. Tus datos se respaldan solos.','Puedes volver a ver esta guía en Ajustes.']
+];
+let tourI=0,tourX=null;
+function abrirTour(){tourI=0;let el=document.getElementById('tour');if(!el){el=document.createElement('div');el.id='tour';el.className='tour';document.body.appendChild(el);
+  el.addEventListener('touchstart',e=>{tourX=e.touches[0].clientX},{passive:true});
+  el.addEventListener('touchend',e=>{if(tourX==null)return;const dx=e.changedTouches[0].clientX-tourX;tourX=null;if(dx<-50)tourSig();else if(dx>50&&tourI>0){tourI--;pintarTour()}},{passive:true})}
+  pintarTour()}
+function pintarTour(){const t=TOUR[tourI],ic=t[0]||(TABS.find(x=>x[0]===t[1])||[])[2],o=t[0]?0:1,tit=t[1+o],txt=t[2+o],tip=t[3+o],ult=tourI===TOUR.length-1;
+ document.getElementById('tour').innerHTML=`${ult?'':'<button class="skip" onclick="cerrarTour()">Saltar</button>'}
+ <div class="tb"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></div><h2>${tit}</h2><p>${txt}</p>${tip?`<div class="tip">${tip}</div>`:''}</div>
+ <div class="tf"><div class="dots">${TOUR.map((_,i)=>`<i class="${i===tourI?'on':''}"></i>`).join('')}</div>
+ <div class="tbtns">${tourI>0?'<button class="ghost" onclick="tourI--;pintarTour()">Atrás</button>':''}<button class="btn" onclick="tourSig()">${ult?'¡Empezar! ✨':'Siguiente'}</button></div></div>`}
+function tourSig(){if(tourI<TOUR.length-1){tourI++;pintarTour()}else cerrarTour()}
+function cerrarTour(){const el=document.getElementById('tour');if(el)el.remove();L.tour=1;saveL()}
+
 // ---------- Ajustes ----------
 let EXTRAS={};fetch('extras.json?x='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{EXTRAS=j||{};if(tab==='ajustes')render()}).catch(()=>{});
 function vAjustes(){
@@ -869,6 +906,7 @@ function vAjustes(){
   <div class="card"><h3 style="font-size:16px">Tu plan</h3>${planHTML()}</div>
   <div class="card"><h3 style="font-size:16px">Respaldo de tus datos</h3><p class="muted">${!st.negocio.registrado?'Activa tu cuenta para respaldar.':(st.negocio.correo?'Tu agenda, clientas y servicios se guardan solos en la nube. Si cambias de celular, los recuperas con tu correo.':'⚠️ Escribe tu correo arriba: con él recuperas tus datos si cambias de celular.')}</p><p class="muted">${L.respaldo?'Último respaldo: '+new Date(L.respaldo).toLocaleString('es-CL',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Todavía sin respaldo.'}</p>
    <div class="row" style="flex-wrap:wrap"><button class="sm" onclick="respaldar(true)">Respaldar ahora</button><button class="ghost sm" onclick="descargarCopia()">Descargar copia con fotos</button><button class="ghost sm" onclick="abrirRecuperar()">Recuperar datos</button></div><p class="muted" style="margin-top:8px">Las fotos del catálogo solo van en la copia descargada: guárdala en Drive o envíatela por WhatsApp.</p></div>
+  <div class="card row between" style="gap:10px"><div><b>Guía de uso</b><div class="muted" style="font-size:13px">Cómo funciona Mimo, paso a paso.</div></div><button class="ghost sm" onclick="abrirTour()">Ver guía</button></div>
   <h3 class="sectiontitle" style="font-size:16px">Herramientas</h3><div class="card herr"><div class="herr-ic">$</div><div class="herr-tx"><b>Contador de Bolsillo</b><small>Ganancias, IVA y lo del SII de tu negocio, en simple.</small></div>${(()=>{const ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&!/Android/.test(navigator.userAgent),u=ios?EXTRAS.contadorWeb:EXTRAS.contador;return u?`<a class="btn sm" href="${u}" target="_blank" rel="noopener">${ios?'Abrir':'Descargar'}</a>`:`<span class="tag">Muy pronto</span>`})()}</div>
   <div class="card"><b>Borrar agenda</b><p class="muted">Borra todas las horas y clientas de este celular (tus servicios y diseños se mantienen).</p><button class="ghost" onclick="resetear()">Borrar horas y clientas</button></div>
   <p class="muted" style="text-align:center;margin:6px 0 20px"><a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--plum)">Política de privacidad</a> · Mimo ${VERSION_APP}</p>`);
@@ -900,6 +938,7 @@ window.androidBack=function(){const sh=document.getElementById('sheet');if(sh.cl
 render();
 revisarHash();
 verificar();
+if(st.negocio.registrado&&!st.negocio.bienvenida&&!L.tour)setTimeout(abrirTour,600);
 revisarRetornoPago();
 setTimeout(()=>{if(!L.respaldo||Date.now()-L.respaldo>864e5)respaldar()},8000);
 cargarFotos().then(()=>{if(tab==='catalogo'||tab==='agenda')render()});
