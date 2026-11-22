@@ -183,7 +183,7 @@ nav button{font-size:10.5px;padding:7px 1px}
 nav button{font-size:10.5px;padding:7px 0;letter-spacing:.1px}nav svg{width:22px;height:22px}
 .gear{width:44px;height:44px;padding:0;border-radius:15px;display:grid;place-items:center;flex:none;color:var(--plum)!important;background:linear-gradient(150deg,var(--card),color-mix(in srgb,var(--soft) 85%,var(--card)))!important;border:1.5px solid color-mix(in srgb,var(--plum2) 65%,transparent);box-shadow:0 8px 16px -9px var(--plum),inset 0 1px 0 rgba(255,255,255,.7)!important;transition:transform .3s}
 .gear:active{transform:rotate(60deg)}.gear.on{color:#fff!important;background:linear-gradient(140deg,var(--plum),color-mix(in srgb,var(--plum) 50%,var(--acc)))!important}
-nav button.fab{flex:1.15;background:none!important;box-shadow:none!important;color:var(--plum);font-weight:800;overflow:visible}
+nav button.fab{flex:1;background:none!important;box-shadow:none!important;color:var(--plum);font-weight:800;overflow:visible}
 nav .orb{width:52px;height:52px;margin:-30px auto 1px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),transparent 42%),linear-gradient(140deg,var(--plum),color-mix(in srgb,var(--plum) 45%,var(--acc)));box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 6.5px color-mix(in srgb,var(--plum2) 70%,transparent),0 12px 22px -6px var(--plum);transition:transform .2s}
 nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(-3px) scale(1.05);box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 7px var(--plum2),0 0 26px 2px color-mix(in srgb,var(--plum) 55%,transparent)}
 .rhero{position:relative;overflow:hidden;border-radius:26px;padding:18px 16px 16px;margin-bottom:12px;color:var(--ink);
@@ -359,14 +359,13 @@ function libres(fecha,minutos,ignorar){
 const TABS=[
  ['agenda','Agenda','<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
  ['clientas','Clientas','<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],
- ['catalogo','Catálogo','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'],
  ['reservar','Reservas','<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'],
  ['caja','Caja','<rect x="2.5" y="6" width="19" height="13" rx="3"/><circle cx="12" cy="12.5" r="2.6"/><path d="M6 9.5v.01M18 15.5v.01"/>'],
- ['servicios','Servicios','<path d="M4 6h16M4 12h16M4 18h10"/>']
+ ['catalogo','Catálogo','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>']
 ];
 let tab='agenda',dia=ymd(hoy());
 function go(t){tab=t;render();window.scrollTo(0,0)}
-function renderNav(){const gb=document.getElementById('gearBtn');if(gb)gb.classList.toggle('on',tab==='ajustes');document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>k==='reservar'?`<button class="fab ${tab===k?'on':''}" onclick="go('${k}')"><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>${n}</button>`:`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
+function renderNav(){const gb=document.getElementById('gearBtn');if(gb)gb.classList.toggle('on',tab==='ajustes'||tab==='servicios');document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>k==='reservar'?`<button class="fab ${tab===k?'on':''}" onclick="go('${k}')"><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>${n}</button>`:`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
 function render(){aplicarTema();document.getElementById('hName').textContent=st.negocio.nombre;document.getElementById('hLogo').innerHTML=miLogo();if(st.negocio.bienvenida){document.getElementById('nav').innerHTML='';return vBienvenida()}if(plan().estado==='bloqueado'){document.getElementById('nav').innerHTML='';return vBloqueo()}renderNav();({agenda:vAgenda,reservar:vReservar,catalogo:vCatalogo,clientas:vClientas,caja:vCaja,servicios:vServicios,ajustes:vAjustes})[tab]()}
 const V=h=>document.getElementById('view').innerHTML=h;
 
@@ -576,7 +575,7 @@ function compartirHTML(){
    <label>Tu WhatsApp (botón de contacto en tu página)</label><input inputmode="tel" placeholder="9 1234 5678" value="${esc(N.whatsapp)}" onchange="st.negocio.whatsapp=this.value;save()">
    <label>Correo para avisos (cada reserva y resumen de la mañana)</label><input type="email" inputmode="email" placeholder="tucorreo@gmail.com" value="${esc(N.correo||'')}" onchange="st.negocio.correo=this.value.trim();save();verificar()">
    <div style="margin-top:12px">${notifHTML()}</div>
-   <p class="muted" style="margin:10px 0 0;font-size:12.5px">Los cambios se actualizan solos en tu página. Precios y servicios se editan en <b>Servicios</b>.</p>
+   <p class="muted" style="margin:10px 0 0;font-size:12.5px">Los cambios se actualizan solos en tu página. Precios y servicios se editan en <b>Ajustes → Servicios</b>.</p>
   </div>`;
 }
 function compartirNativo(){const LK=enlaceReserva(),n=st.negocio.nombre||'mi salón';if(navigator.share){navigator.share({title:n,text:'✨ Reserva tu hora en '+n,url:LK}).catch(()=>{})}else copiarEnlace()}
@@ -906,7 +905,7 @@ function pintarCli(){const el=document.getElementById('lcli');if(!el)return;cons
 
 // ---------- Servicios ----------
 function vServicios(){
-  V(`<h2 class="sectiontitle">Servicios y tiempos</h2><p class="muted" style="margin-top:-4px">Toca un servicio para cambiar su tiempo, precio, largos o extras. Agrega todos los que quieras.</p>
+  V(`<button class="ghost sm" style="margin-bottom:8px" onclick="go('ajustes')">‹ Ajustes</button><br><h2 class="sectiontitle">Servicios y tiempos</h2><p class="muted" style="margin-top:-4px">Toca un servicio para cambiar su tiempo, precio, largos o extras. Agrega todos los que quieras.</p>
   ${st.negocio.rubros.map(rb=>`<div class="card"><div class="row between" style="margin-bottom:6px"><div class="row"><span class="dot" style="background:${RUBROS[rb].c}"></span><b>${RUBROS[rb].n}</b></div><button class="ghost sm" onclick="editSvc('','${rb}')">+ Agregar</button></div>
    ${st.servicios.filter(x=>x.rubro===rb).map(x=>`<div class="row between" style="padding:11px 0;border-top:1px dashed var(--line);cursor:pointer" onclick="editSvc('${x.id}')"><div><span style="${x.activo?'':'text-decoration:line-through;color:var(--muted)'}">${esc(x.nombre)}</span><br><span class="muted" style="font-size:12px">${dur(+x.min||0)}${x.variantes.length?' · '+x.variantes.length+' largos':''}${x.extras.length?' · '+x.extras.length+(x.extras.length===1?' extra':' extras'):''}${+x.retoque?' · retoque '+x.retoque+' d':''}</span></div><b style="white-space:nowrap">${clp(+x.precio||0)} ›</b></div>`).join('')||'<p class="muted">Sin servicios todavía.</p>'}</div>`).join('')}
   <button style="width:100%;margin-bottom:20px" onclick="editSvc('',st.negocio.rubros[0])">+ Crear servicio con tu propio nombre</button>`);
@@ -1065,6 +1064,7 @@ function gh(ic,t,sub){return`<div class="gh"><i>${ic}</i><div><h3>${t}</h3>${sub
 function vAjustes(){
   const N=st.negocio;
   V(`<h2 class="sectiontitle">Ajustes</h2>
+  <div class="card herr" style="cursor:pointer" onclick="go('servicios')"><div class="herr-ic">💅</div><div class="herr-tx"><b>Servicios y precios</b><small>Agrega, edita o quita lo que ofreces.</small></div><span style="color:var(--plum);font-size:22px">›</span></div>
   <div class="card">${gh('🏷️','Tu negocio','Lo que ven tus clientas')}
   <label>Nombre del negocio</label><input value="${esc(N.nombre)}" onchange="st.negocio.nombre=this.value;save();render()">
   <label>WhatsApp del negocio (aquí te llegan las reservas)</label><input inputmode="tel" placeholder="9 1234 5678" value="${esc(N.whatsapp)}" onchange="st.negocio.whatsapp=this.value;save()">
