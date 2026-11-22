@@ -291,8 +291,7 @@ async function unpackZ(s){const ds=new Blob([unb62(s)]).stream().pipeThrough(new
 // ---------- datos ----------
 const RUBROS={unas:{n:'Uñas',c:'var(--u)',e:'💅'},pestanas:{n:'Pestañas y cejas',c:'var(--p)',e:'👁️'},pelo:{n:'Peluquería',c:'var(--h)',e:'💇‍♀️'},
  masajes:{n:'Masajes',c:'#5fb99a',e:'💆‍♀️'},depilacion:{n:'Depilación',c:'#ee8f6b',e:'🌸'},facial:{n:'Faciales',c:'#6aaee0',e:'🧖‍♀️'},
- spa:{n:'Spa y corporal',c:'#a98be0',e:'🛁'},maquillaje:{n:'Maquillaje',c:'#e3709c',e:'💄'},pies:{n:'Pies y podología',c:'#d3a45a',e:'🦶'},
- barberia:{n:'Barbería',c:'#7d8796',e:'💈'}};
+ spa:{n:'Spa y corporal',c:'#a98be0',e:'🛁'},maquillaje:{n:'Maquillaje',c:'#e3709c',e:'💄'},pies:{n:'Pies y podología',c:'#d3a45a',e:'🦶'}};
 // Servicios típicos de cada rubro: [nombre, minutos, precio, días para retoque, variantes, extras]
 const DEF_SVC={
  masajes:[['Masaje relajante',60,25000,30],['Masaje descontracturante',60,28000,21],['Masaje con piedras calientes',75,32000,30],['Drenaje linfático',60,25000,7],['Masaje reductivo',50,22000,7],['Masaje prenatal',60,27000,21]],
@@ -300,8 +299,7 @@ const DEF_SVC={
  facial:[['Limpieza facial profunda',60,25000,30],['Hidratación facial',45,20000,30],['Peeling químico',45,28000,30],['Dermaplaning',45,25000,30],['Radiofrecuencia facial',40,30000,15]],
  spa:[['Exfoliación corporal',45,20000,30],['Envoltura de chocolate o fango',60,28000,30],['Circuito spa (day spa)',150,60000,0],['Spa de manos',30,12000,30]],
  maquillaje:[['Maquillaje social',60,25000,0],['Maquillaje de novia',90,60000,0,[],[['Prueba previa',60,30000]]],['Peinado para evento',60,25000,0],['Maquillaje + peinado',120,45000,0]],
- pies:[['Podología clínica',45,18000,30],['Spa de pies',45,15000,30],['Tratamiento de uña encarnada',30,15000,0]],
- barberia:[['Corte de barba',30,8000,14],['Perfilado de barba',20,6000,14],['Corte + barba',60,15000,21]]
+ pies:[['Podología clínica',45,18000,30],['Spa de pies',45,15000,30],['Tratamiento de uña encarnada',30,15000,0]]
 };
 function defServicios(rb){return(DEF_SVC[rb]||[]).map(([nombre,min,precio,retoque,v=[],x=[]])=>({id:uid(),rubro:rb,nombre,min,precio,retoque,variantes:v.map(([n,m,p])=>({n,min:m,precio:p})),extras:x.map(([n,m,p])=>({n,min:m,precio:p})),activo:true}))}
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -330,7 +328,7 @@ function seed(){
     S('pestanas','Relleno de extensiones',90,15000,21),
     S('pestanas','Laminado de cejas',30,17000,42),
     S('pelo','Corte mujer',45,12000,0),
-    S('pelo','Corte hombre',30,8000,0),
+    S('pelo','Brushing',45,12000,0),
     S('pelo','Alisado permanente',150,60000,120,pelo),
     S('pelo','Tinte completo',120,35000,42,pelo.map(v=>({...v,precio:v.precio/2})))
   ];

@@ -178,7 +178,7 @@ const TEMAS={
 };
 
 const API='https://script.google.com/macros/s/AKfycbzVAXe-wM8xVHy9DOyh-EbtR9cfySFpLNvnYqR4-ZqMQR1GYJzkrj-Sovw02bKuq2AH/exec';
-const RUB={unas:['Uñas','#e48ab0'],pestanas:['Pestañas y cejas','#9d8ad6'],pelo:['Peluquería','#e0a96d'],masajes:['Masajes','#5fb99a'],depilacion:['Depilación','#ee8f6b'],facial:['Faciales','#6aaee0'],spa:['Spa y corporal','#a98be0'],maquillaje:['Maquillaje','#e3709c'],pies:['Pies y podología','#d3a45a'],barberia:['Barbería','#7d8796']};
+const RUB={unas:['Uñas','#e48ab0'],pestanas:['Pestañas y cejas','#9d8ad6'],pelo:['Peluquería','#e0a96d'],masajes:['Masajes','#5fb99a'],depilacion:['Depilación','#ee8f6b'],facial:['Faciales','#6aaee0'],spa:['Spa y corporal','#a98be0'],maquillaje:['Maquillaje','#e3709c'],pies:['Pies y podología','#d3a45a']};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clp=n=>'$'+Math.round(n).toLocaleString('es-CL');
 const dur=m=>m>=60?(Math.floor(m/60)+' h'+(m%60?' '+m%60+' min':'')):m+' min';
