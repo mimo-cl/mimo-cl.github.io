@@ -229,16 +229,30 @@ nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(
 .rconf select{width:100%}.dias7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:4px}
 .dias7 button{padding:10px 0;border-radius:12px;font-size:13px;font-weight:800;background:color-mix(in srgb,var(--soft) 80%,var(--card))!important;color:var(--muted);box-shadow:none!important;border:1.5px solid var(--line)}
 .dias7 button.on{color:#fff;border-color:transparent;background:linear-gradient(150deg,var(--plum),color-mix(in srgb,var(--plum) 55%,var(--acc)))!important;box-shadow:0 6px 12px -6px var(--plum)!important}
+.drw{position:fixed;inset:0;z-index:30;background:rgba(40,20,40,.38);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}
+.drw.open{opacity:1;pointer-events:auto}
+.drw aside{position:absolute;left:0;top:0;bottom:0;width:min(84vw,330px);overflow-y:auto;padding:22px 16px 30px;border-radius:0 28px 28px 0;transform:translateX(-105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+ background:radial-gradient(90% 40% at 0 0,color-mix(in srgb,var(--b1) 80%,transparent),transparent 70%),radial-gradient(90% 40% at 100% 100%,color-mix(in srgb,var(--b2) 80%,transparent),transparent 70%),var(--card);box-shadow:20px 0 50px -20px var(--plum)}
+.drw.open aside{transform:none}
+.dhd{display:flex;align-items:center;gap:12px;padding-bottom:14px;margin-bottom:10px;border-bottom:1.5px dashed color-mix(in srgb,var(--plum2) 60%,transparent)}
+.dhd .lg{width:50px;height:50px;border-radius:16px;overflow:hidden;flex:none;box-shadow:0 8px 16px -8px var(--plum)}.dhd b{font-family:'Playfair Display',Georgia,serif;font-size:20px;color:var(--plum);display:block;line-height:1.1}
+.dit{width:100%;display:flex;align-items:center;gap:12px;padding:11px 10px;margin:3px 0;border-radius:16px;text-align:left;text-decoration:none;font-size:15px;font-weight:700;color:var(--ink)!important;background:none!important;box-shadow:none!important;border:0}
+.dit:active,.dit.on{background:color-mix(in srgb,var(--soft) 85%,transparent)!important}
+.dit i{width:38px;height:38px;flex:none;border-radius:13px;display:grid;place-items:center;font-style:normal;font-size:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--plum2) 80%,#fff),color-mix(in srgb,var(--acc) 55%,#fff));box-shadow:0 6px 12px -7px var(--plum)}
+.dit small{display:block;font-size:12px;font-weight:500;color:var(--muted)}.dit .ar{margin-left:auto;color:var(--plum)}
+.dsec{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800;color:var(--plum);margin:14px 10px 4px}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand"><div class="lg" id="hLogo"></div><div><h1 id="hName">Mimo</h1><small>Agenda de belleza</small></div></div>
+  <button class="gear" aria-label="Menú" onclick="abrirMenu()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <div class="brand" style="flex:1;min-width:0;margin-left:10px"><div class="lg" id="hLogo"></div><div><h1 id="hName">Mimo</h1><small>Agenda de belleza</small></div></div>
   <button class="gear" id="gearBtn" aria-label="Ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </header>
 <main id="view"></main>
 
 <nav id="nav"></nav>
+<div class="drw" id="drw" onclick="if(event.target===this)cerrarMenu()"><aside id="drwIn"></aside></div>
 <div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="in" id="sheetIn"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1023,6 +1037,24 @@ function pintarTour(){const t=TOUR[tourI],ic=t[0]||(TABS.find(x=>x[0]===t[1])||[
  <div class="tbtns">${tourI>0?'<button class="ghost" onclick="tourI--;pintarTour()">Atrás</button>':''}<button class="btn" onclick="tourSig()">${ult?'¡Empezar! ✨':'Siguiente'}</button></div></div>`}
 function tourSig(){if(tourI<TOUR.length-1){tourI++;pintarTour()}else cerrarTour()}
 function cerrarTour(){const el=document.getElementById('tour');if(el)el.remove();L.tour=1;saveL()}
+
+// ---------- Menú lateral ----------
+function abrirMenu(){const N=st.negocio,p=plan(),ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&!/Android/.test(navigator.userAgent),cu=ios?EXTRAS.contadorWeb:EXTRAS.contador;
+  const it=(ic,t,sub,act,on)=>`<button class="dit ${on?'on':''}" onclick="${act}"><i>${ic}</i><span>${t}${sub?`<small>${sub}</small>`:''}</span><span class="ar">›</span></button>`;
+  document.getElementById('drwIn').innerHTML=`<div class="dhd"><div class="lg">${miLogo()}</div><div style="min-width:0"><b>${esc(N.nombre||'Mimo')}</b><span class="muted" style="font-size:12.5px">${p.estado==='pagado'?'Plan activo':p.estado==='prueba'?'Prueba gratis':'Plan vencido'}</span></div></div>
+  <div class="dsec">Tu negocio</div>
+  ${it('💅','Servicios y precios','Lo que ofreces',"cerrarMenu();go('servicios')",tab==='servicios')}
+  ${it('⚙️','Ajustes','Horario, avisos, diseño',"cerrarMenu();go('ajustes')",tab==='ajustes')}
+  ${it('💳','Mi plan','Suscripción y pagos',"cerrarMenu();go('ajustes')")}
+  <div class="dsec">Herramientas</div>
+  ${cu?`<a class="dit" href="${cu}" target="_blank" rel="noopener"><i>💰</i><span>Contador de Bolsillo<small>Ganancias e impuestos</small></span><span class="ar">›</span></a>`:it('💰','Contador de Bolsillo','Muy pronto',"toast('Muy pronto')")}
+  ${it('☁️','Respaldo','Guarda o recupera tus datos',"cerrarMenu();go('ajustes')")}
+  <div class="dsec">Ayuda</div>
+  ${it('🧭','Guía de uso','Cómo funciona Mimo',"cerrarMenu();abrirTour()")}
+  <a class="dit" href="privacidad.html" target="_blank" rel="noopener"><i>🔒</i><span>Privacidad y seguridad</span><span class="ar">›</span></a>
+  <p class="muted" style="text-align:center;font-size:12px;margin-top:18px">Mimo · versión ${VERSION_APP.replace('mimo-','')}</p>`;
+  document.getElementById('drw').classList.add('open')}
+function cerrarMenu(){document.getElementById('drw').classList.remove('open')}
 
 // ---------- Recordatorio editable ----------
 const MSG_DEF='Hola {clienta}! Te recuerdo tu hora en {negocio}: {servicio}, {fecha} a las {hora} (dura aprox. {duracion}). Responde SÍ para confirmar 💅';
