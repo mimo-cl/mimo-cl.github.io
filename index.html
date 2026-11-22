@@ -9,18 +9,18 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Mimo – Agenda de belleza</title>
-<meta name="description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas y peluquería.">
+<meta name="description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas, peluquería, masajes, depilación, faciales y spa.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mimo">
 <meta property="og:locale" content="es_CL">
 <meta property="og:title" content="Mimo · Agenda de belleza con reservas en línea">
-<meta property="og:description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas y peluquería.">
+<meta property="og:description" content="Tus clientas reservan solas desde Instagram, WhatsApp o Facebook. Para uñas, pestañas, peluquería, masajes, depilación, faciales y spa.">
 <meta property="og:image" content="https://mimo-cl.github.io/og.jpg">
 <meta property="og:image:secure_url" content="https://mimo-cl.github.io/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Reserva tu hora aquí: uñas, pestañas y peluquería">
+<meta property="og:image:alt" content="Reserva tu hora aquí: belleza, spa y bienestar">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://mimo-cl.github.io/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -289,7 +289,21 @@ async function unpackZ(s){const ds=new Blob([unb62(s)]).stream().pipeThrough(new
 
 
 // ---------- datos ----------
-const RUBROS={unas:{n:'Uñas',c:'var(--u)'},pestanas:{n:'Pestañas y cejas',c:'var(--p)'},pelo:{n:'Peluquería',c:'var(--h)'}};
+const RUBROS={unas:{n:'Uñas',c:'var(--u)',e:'💅'},pestanas:{n:'Pestañas y cejas',c:'var(--p)',e:'👁️'},pelo:{n:'Peluquería',c:'var(--h)',e:'💇‍♀️'},
+ masajes:{n:'Masajes',c:'#5fb99a',e:'💆‍♀️'},depilacion:{n:'Depilación',c:'#ee8f6b',e:'🌸'},facial:{n:'Faciales',c:'#6aaee0',e:'🧖‍♀️'},
+ spa:{n:'Spa y corporal',c:'#a98be0',e:'🛁'},maquillaje:{n:'Maquillaje',c:'#e3709c',e:'💄'},pies:{n:'Pies y podología',c:'#d3a45a',e:'🦶'},
+ barberia:{n:'Barbería',c:'#7d8796',e:'💈'}};
+// Servicios típicos de cada rubro: [nombre, minutos, precio, días para retoque, variantes, extras]
+const DEF_SVC={
+ masajes:[['Masaje relajante',60,25000,30],['Masaje descontracturante',60,28000,21],['Masaje con piedras calientes',75,32000,30],['Drenaje linfático',60,25000,7],['Masaje reductivo',50,22000,7],['Masaje prenatal',60,27000,21]],
+ depilacion:[['Depilación con cera: rostro',20,6000,21],['Depilación con cera: axilas',15,6000,21],['Depilación con cera: piernas completas',45,15000,28],['Depilación con cera: rebaje',30,12000,28],['Depilación láser (sesión)',30,25000,30],['Diseño de cejas con hilo',20,7000,21]],
+ facial:[['Limpieza facial profunda',60,25000,30],['Hidratación facial',45,20000,30],['Peeling químico',45,28000,30],['Dermaplaning',45,25000,30],['Radiofrecuencia facial',40,30000,15]],
+ spa:[['Exfoliación corporal',45,20000,30],['Envoltura de chocolate o fango',60,28000,30],['Circuito spa (day spa)',150,60000,0],['Spa de manos',30,12000,30]],
+ maquillaje:[['Maquillaje social',60,25000,0],['Maquillaje de novia',90,60000,0,[],[['Prueba previa',60,30000]]],['Peinado para evento',60,25000,0],['Maquillaje + peinado',120,45000,0]],
+ pies:[['Podología clínica',45,18000,30],['Spa de pies',45,15000,30],['Tratamiento de uña encarnada',30,15000,0]],
+ barberia:[['Corte de barba',30,8000,14],['Perfilado de barba',20,6000,14],['Corte + barba',60,15000,21]]
+};
+function defServicios(rb){return(DEF_SVC[rb]||[]).map(([nombre,min,precio,retoque,v=[],x=[]])=>({id:uid(),rubro:rb,nombre,min,precio,retoque,variantes:v.map(([n,m,p])=>({n,min:m,precio:p})),extras:x.map(([n,m,p])=>({n,min:m,precio:p})),activo:true}))}
 const uid=()=>Math.random().toString(36).slice(2,9);
 const hoy=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 const ymd=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
@@ -320,6 +334,7 @@ function seed(){
     S('pelo','Alisado permanente',150,60000,120,pelo),
     S('pelo','Tinte completo',120,35000,42,pelo.map(v=>({...v,precio:v.precio/2})))
   ];
+  Object.keys(DEF_SVC).forEach(rb=>servicios.push(...defServicios(rb)));
   const by=n=>servicios.find(s=>s.nombre===n).id;
   const catalogo=[
     {id:uid(),servicioId:by('Uñas acrílicas'),nombre:'Francesa clásica',img:'',min:0,precio:0},
@@ -642,7 +657,7 @@ async function imagenRedes(tipo){
   let fs=110;c.font=`700 ${fs}px ${ser}`;while(c.measureText(n).width>W-140&&fs>48){fs-=4;c.font=`700 ${fs}px ${ser}`}
   c.fillStyle='#c2558a';c.fillText(n,W/2,y);y+=86;
   c.fillStyle='#6c5a72';c.font=`700 50px ${san}`;c.fillText('Reserva tu hora aquí ✨',W/2,y);y+=58;
-  const rub=(st.negocio.rubros||[]).map(r=>({unas:'💅 Uñas',pestanas:'👁️ Pestañas',pelo:'💇‍♀️ Peluquería'}[r])).filter(Boolean).join('   ·   ');
+  const rub=(st.negocio.rubros||[]).slice(0,3).map(r=>RUBROS[r]?RUBROS[r].e+' '+RUBROS[r].n.split(' ')[0]:'').filter(Boolean).join('   ·   ');
   if(rub){c.fillStyle='#a14d78';c.font=`600 34px ${san}`;c.fillText(rub,W/2,y+12);y+=40}
   const qs=hist?520:480,cw=qs+90,cx=W/2-cw/2,cy=y+44;
   c.save();c.shadowColor='rgba(160,70,120,.32)';c.shadowBlur=70;c.shadowOffsetY=28;c.fillStyle='#fff';rr(c,cx,cy,cw,cw,64);c.fill();c.restore();
@@ -1021,7 +1036,7 @@ async function usarPin(){const p=(document.getElementById('recP').value||'').tri
 // ---------- Guía de inicio ----------
 const TOUR=[
  ['<path d="M12 3l2.2 5.4L20 9l-4.4 3.8L17 19l-5-3-5 3 1.4-6.2L4 9l5.8-.6z"/>','Bienvenida a Mimo','Tu agenda de belleza en el bolsillo. En 1 minuto te mostramos cómo funciona.','Desliza o toca Siguiente 👉'],
- [null,'servicios','1. Arma tus servicios','En <b>Servicios</b> eliges lo que haces: uñas, pestañas o peluquería, con su duración y precio. Crea los tuyos con el nombre que quieras.','💡 Lo que dura cada servicio bloquea esa hora en tu agenda.'],
+ [null,'servicios','1. Arma tus servicios','En <b>Servicios</b> eliges lo que haces: uñas, pestañas, peluquería, masajes, depilación, faciales, spa y más, con su duración y precio. Crea los tuyos con el nombre que quieras.','💡 Lo que dura cada servicio bloquea esa hora en tu agenda.'],
  [null,'reservar','2. Comparte tu enlace','En <b>Reservar</b> está tu enlace y tu QR. Ponlo en Instagram, WhatsApp o Facebook y tus clientas eligen día y hora solas.','💡 El botón de Instagram te arma una historia lista.'],
  [null,'agenda','3. Todo llega a tu Agenda','Cada reserva aparece sola en tu <b>Agenda</b> y te avisamos por correo. También puedes agendar a mano con <b>+ Agendar hora</b>.','💡 Toca la fecha para ver cualquier día del mes.'],
  [null,'catalogo','4. Muestra tus diseños','Sube fotos de tus trabajos al <b>Catálogo</b>. Tus clientas las ven al reservar y eligen su diseño.','💡 Puedes subir muchas fotos de una vez.'],
@@ -1105,7 +1120,7 @@ function vAjustes(){
   <div class="card">${gh('🏷️','Tu negocio','Lo que ven tus clientas')}
   <label>Nombre del negocio</label><input value="${esc(N.nombre)}" onchange="st.negocio.nombre=this.value;save();render()">
   <label>WhatsApp del negocio (aquí te llegan las reservas)</label><input inputmode="tel" placeholder="9 1234 5678" value="${esc(N.whatsapp)}" onchange="st.negocio.whatsapp=this.value;save()">
-  <label>¿Qué haces? (puedes marcar los 3)</label><div class="chips">${Object.keys(RUBROS).map(rb=>`<button class="chip ${N.rubros.includes(rb)?'on':''}" onclick="togRubro('${rb}')">${N.rubros.includes(rb)?'✓ ':'+ '}${RUBROS[rb].n}</button>`).join('')}</div>
+  <label>¿Qué haces? (marca todo lo que ofreces)</label><div class="chips">${Object.keys(RUBROS).map(rb=>`<button class="chip ${N.rubros.includes(rb)?'on':''}" onclick="togRubro('${rb}')">${N.rubros.includes(rb)?'✓ ':RUBROS[rb].e+' '}${RUBROS[rb].n}</button>`).join('')}</div>
   <p class="muted" style="margin-bottom:0">Cada rubro trae sus servicios y tiempos típicos ya cargados.</p></div>
   <div class="card">${gh('🕐','Horario de atención','Tus clientas solo reservan dentro de este horario')}
   <label>Días que atiendes</label><div class="chips">${[1,2,3,4,5,6,0].map(d=>`<button class="chip ${N.dias.includes(d)?'on':''}" onclick="togDia(${d})">${DIAS[d]}</button>`).join('')}</div>
@@ -1143,7 +1158,7 @@ function vBienvenida(){
   <label>Tu WhatsApp (aquí te llegan las reservas)</label><input inputmode="tel" placeholder="9 1234 5678" value="${esc(st.negocio.whatsapp)}" onchange="st.negocio.whatsapp=this.value;save()">
   <label>Tu nombre</label><input value="${esc(st.negocio.dueña||'')}" placeholder="Ej: Camila" onchange="st.negocio.dueña=this.value;save()">
   <label>Tu correo (te avisamos cada reserva)</label><input type="email" inputmode="email" value="${esc(st.negocio.correo||'')}" placeholder="tucorreo@gmail.com" onchange="st.negocio.correo=this.value.trim();save()">
-  <label>¿Qué haces? (marca todo lo que haces, pueden ser los 3)</label><div class="chips">${Object.keys(RUBROS).map(rb=>`<button class="chip ${st.negocio.rubros.includes(rb)?'on':''}" onclick="togRubro('${rb}')">${st.negocio.rubros.includes(rb)?'✓ ':'+ '}${RUBROS[rb].n}</button>`).join('')}</div>
+  <label>¿Qué haces? (marca todo lo que ofreces)</label><div class="chips">${Object.keys(RUBROS).map(rb=>`<button class="chip ${st.negocio.rubros.includes(rb)?'on':''}" onclick="togRubro('${rb}')">${st.negocio.rubros.includes(rb)?'✓ ':RUBROS[rb].e+' '}${RUBROS[rb].n}</button>`).join('')}</div>
   <p class="muted" style="margin-top:10px">Empiezas con <b style="color:var(--plum)">30 días gratis</b>.</p></div>
   <div class="card"><b>Elige tu estilo</b><p class="muted" style="margin-top:4px">Lo puedes cambiar cuando quieras en Ajustes.</p>${selTemas()}</div>
   <button style="width:100%;margin-bottom:10px" onclick="empezar()">Empezar</button>
@@ -1151,7 +1166,7 @@ function vBienvenida(){
   <p class="muted" style="text-align:center;margin-bottom:20px">Al empezar aceptas la <a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--plum)">política de privacidad</a>.</p>`);
 }
 function togDia(d){const a=st.negocio.dias;st.negocio.dias=a.includes(d)?a.filter(x=>x!==d):[...a,d];save();render()}
-function togRubro(rb){const a=st.negocio.rubros;if(a.includes(rb)){if(a.length===1)return toast('Deja al menos un rubro');st.negocio.rubros=a.filter(x=>x!==rb)}else a.push(rb);save();render()}
+function togRubro(rb){const a=st.negocio.rubros;if(a.includes(rb)){if(a.length===1)return toast('Deja al menos un rubro');st.negocio.rubros=a.filter(x=>x!==rb)}else{a.push(rb);if(!st.servicios.some(x=>x.rubro===rb)){const n=defServicios(rb);st.servicios.push(...n);if(n.length)toast('Agregamos '+n.length+' servicios de '+RUBROS[rb].n+': ajusta precios en Servicios')}}save();render()}
 let confirmReset=false;
 function resetear(){if(!confirmReset){confirmReset=true;toast('Toca otra vez para confirmar');setTimeout(()=>confirmReset=false,3000);return}st.citas=[];st.clientas=[];save();dia=ymd(hoy());go('agenda');toast('Agenda borrada')}
 
