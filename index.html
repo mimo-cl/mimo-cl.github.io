@@ -180,7 +180,9 @@ nav button.on{color:var(--onp);background:linear-gradient(135deg,var(--plum),col
 .prox{margin-top:10px;background:rgba(255,255,255,.72);border-radius:14px;padding:8px 12px;font-size:14px;color:var(--ink)}
 nav button{font-size:10.5px;padding:7px 1px}
 /* ---------- Reservas estilo Silla ---------- */
-nav button{font-size:9.6px;padding:7px 0;letter-spacing:.1px}nav svg{width:21px;height:21px}
+nav button{font-size:10.5px;padding:7px 0;letter-spacing:.1px}nav svg{width:22px;height:22px}
+.gear{width:44px;height:44px;padding:0;border-radius:15px;display:grid;place-items:center;flex:none;color:var(--plum)!important;background:linear-gradient(150deg,var(--card),color-mix(in srgb,var(--soft) 85%,var(--card)))!important;border:1.5px solid color-mix(in srgb,var(--plum2) 65%,transparent);box-shadow:0 8px 16px -9px var(--plum),inset 0 1px 0 rgba(255,255,255,.7)!important;transition:transform .3s}
+.gear:active{transform:rotate(60deg)}.gear.on{color:#fff!important;background:linear-gradient(140deg,var(--plum),color-mix(in srgb,var(--plum) 50%,var(--acc)))!important}
 nav button.fab{flex:1.15;background:none!important;box-shadow:none!important;color:var(--plum);font-weight:800;overflow:visible}
 nav .orb{width:52px;height:52px;margin:-30px auto 1px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),transparent 42%),linear-gradient(140deg,var(--plum),color-mix(in srgb,var(--plum) 45%,var(--acc)));box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 6.5px color-mix(in srgb,var(--plum2) 70%,transparent),0 12px 22px -6px var(--plum);transition:transform .2s}
 nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(-3px) scale(1.05);box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 7px var(--plum2),0 0 26px 2px color-mix(in srgb,var(--plum) 55%,transparent)}
@@ -232,7 +234,7 @@ nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(
 <body>
 <header>
   <div class="brand"><div class="lg" id="hLogo"></div><div><h1 id="hName">Mimo</h1><small>Agenda de belleza</small></div></div>
-  <button class="ghost sm" onclick="go('ajustes')">Ajustes</button>
+  <button class="gear" id="gearBtn" aria-label="Ajustes" onclick="go('ajustes')"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </header>
 <main id="view"></main>
 
@@ -360,12 +362,11 @@ const TABS=[
  ['catalogo','Catálogo','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'],
  ['reservar','Reservas','<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'],
  ['caja','Caja','<rect x="2.5" y="6" width="19" height="13" rx="3"/><circle cx="12" cy="12.5" r="2.6"/><path d="M6 9.5v.01M18 15.5v.01"/>'],
- ['servicios','Servicios','<path d="M4 6h16M4 12h16M4 18h10"/>'],
- ['ajustes','Ajustes','<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>']
+ ['servicios','Servicios','<path d="M4 6h16M4 12h16M4 18h10"/>']
 ];
 let tab='agenda',dia=ymd(hoy());
 function go(t){tab=t;render();window.scrollTo(0,0)}
-function renderNav(){document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>k==='reservar'?`<button class="fab ${tab===k?'on':''}" onclick="go('${k}')"><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>${n}</button>`:`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
+function renderNav(){const gb=document.getElementById('gearBtn');if(gb)gb.classList.toggle('on',tab==='ajustes');document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>k==='reservar'?`<button class="fab ${tab===k?'on':''}" onclick="go('${k}')"><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>${n}</button>`:`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
 function render(){aplicarTema();document.getElementById('hName').textContent=st.negocio.nombre;document.getElementById('hLogo').innerHTML=miLogo();if(st.negocio.bienvenida){document.getElementById('nav').innerHTML='';return vBienvenida()}if(plan().estado==='bloqueado'){document.getElementById('nav').innerHTML='';return vBloqueo()}renderNav();({agenda:vAgenda,reservar:vReservar,catalogo:vCatalogo,clientas:vClientas,caja:vCaja,servicios:vServicios,ajustes:vAjustes})[tab]()}
 const V=h=>document.getElementById('view').innerHTML=h;
 
@@ -1095,7 +1096,7 @@ function vAjustes(){
   <div class="card herr"><div class="herr-ic">$</div><div class="herr-tx"><b>Contador de Bolsillo</b><small>Ganancias, IVA y lo del SII de tu negocio, en simple.</small></div>${(()=>{const ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&!/Android/.test(navigator.userAgent),u=ios?EXTRAS.contadorWeb:EXTRAS.contador;return u?`<a class="btn sm" href="${u}" target="_blank" rel="noopener">${ios?'Abrir':'Descargar'}</a>`:`<span class="tag">Muy pronto</span>`})()}</div>
   <div class="card herr"><div class="herr-ic">?</div><div class="herr-tx"><b>Guía de uso</b><small>Cómo funciona Mimo, paso a paso.</small></div><button class="ghost sm" onclick="abrirTour()">Ver guía</button></div>
   <div class="card">${gh('🗑️','Borrar agenda','')}<p class="muted">Borra todas las horas y clientas de este celular (tus servicios y diseños se mantienen).</p><button class="ghost" onclick="resetear()">Borrar horas y clientas</button></div>
-  <p class="muted" style="text-align:center;margin:6px 0 20px"><a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--plum)">Política de privacidad</a> · Mimo ${VERSION_APP}</p>`);
+  <p class="muted" style="text-align:center;margin:6px 0 20px"><a href="privacidad.html" target="_blank" rel="noopener" style="color:var(--plum)">Privacidad y seguridad</a> · Mimo ${VERSION_APP}</p>`);
 }
 function selTemas(){return `<div class="themes">${Object.entries(TEMAS).map(([k,t])=>`<button class="th ${st.negocio.tema===k?'on':''}" onclick="st.negocio.tema='${k}';save();render()"><div class="pv" style="background:radial-gradient(90% 80% at 0 0,${t.v.b1},transparent 70%),radial-gradient(90% 80% at 100% 100%,${t.v.b2},transparent 70%),${t.v.bg}"><div style="display:flex;gap:6px;align-items:center"><span style="width:22px;height:22px;border-radius:7px;overflow:hidden;display:block">${logoSVG(...t.lg)}</span><i style="flex:1;background:${t.v.ink};opacity:.8;height:8px"></i></div><i style="background:${t.v.card};border:1px solid ${t.v.line};height:22px"></i><i style="background:linear-gradient(90deg,${t.v.plum},${t.v.acc});width:60%;height:14px;border-radius:9px"></i></div><div class="nm">${t.n}</div></button>`).join('')}</div>`}
 function subirLogo(e){const fl=e.target.files[0];if(!fl)return;leerFoto(fl,u=>{st.negocio.logo=u;save();render();toast('Logo actualizado')})}
