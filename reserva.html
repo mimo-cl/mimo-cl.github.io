@@ -117,6 +117,38 @@ nav svg{width:22px;height:22px}
 .svc{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px dashed var(--line);cursor:pointer;grid-template-columns:none}
 .foot{text-align:center;margin-top:18px;font-size:12px;color:var(--muted)}
 body{padding-bottom:30px}
+/* ---------- Diseño v2: más color, textura y orden ---------- */
+body{background:
+  radial-gradient(60vmax 50vmax at -10% -10%,var(--b1) 0%,transparent 62%),
+  radial-gradient(55vmax 45vmax at 110% 12%,var(--b2) 0%,transparent 62%),
+  radial-gradient(50vmax 40vmax at 25% 108%,var(--b2) 0%,transparent 60%),
+  radial-gradient(45vmax 40vmax at 100% 100%,var(--b1) 0%,transparent 58%),
+  repeating-linear-gradient(135deg,color-mix(in srgb,var(--plum) 5%,transparent) 0 1.5px,transparent 1.5px 13px),var(--bg);background-attachment:fixed}
+body::before{opacity:.85}
+.card{border:1.5px solid transparent;
+ background:linear-gradient(color-mix(in srgb,var(--card) 90%,transparent),color-mix(in srgb,var(--card) 90%,transparent)) padding-box,
+  linear-gradient(140deg,color-mix(in srgb,var(--plum2) 75%,#fff),color-mix(in srgb,var(--acc) 50%,#fff) 55%,color-mix(in srgb,var(--plum2) 55%,#fff)) border-box;
+ box-shadow:0 14px 30px -18px color-mix(in srgb,var(--plum) 60%,transparent),0 3px 10px -4px color-mix(in srgb,var(--acc) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.75)}
+button,.btn{background:linear-gradient(135deg,var(--plum) 0%,color-mix(in srgb,var(--plum) 55%,var(--acc)) 100%);box-shadow:0 8px 18px -8px var(--plum),inset 0 1px 0 rgba(255,255,255,.35)}
+.chip.on{background:linear-gradient(135deg,var(--plum),color-mix(in srgb,var(--plum) 55%,var(--acc)));box-shadow:0 5px 12px -6px var(--plum)}
+.chip{border-color:color-mix(in srgb,var(--plum2) 55%,var(--line))}
+.sectiontitle{font-size:23px;background:linear-gradient(90deg,var(--plum),color-mix(in srgb,var(--plum) 45%,var(--acc)));-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.hello{background:linear-gradient(135deg,color-mix(in srgb,var(--plum2) 80%,#fff) 0%,color-mix(in srgb,var(--b2) 90%,#fff) 45%,color-mix(in srgb,var(--acc) 50%,#fff) 100%)!important;box-shadow:0 18px 36px -18px color-mix(in srgb,var(--plum) 75%,transparent)}
+.hello::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.6) 1.2px,transparent 1.7px);background-size:15px 15px;-webkit-mask-image:linear-gradient(115deg,#000 0,transparent 65%);mask-image:linear-gradient(115deg,#000 0,transparent 65%)}
+.hello>*:not(.deco){position:relative;z-index:1}
+.hello h2{text-shadow:0 2px 0 rgba(255,255,255,.6)}
+.hello .stats div{background:rgba(255,255,255,.72);box-shadow:0 4px 12px -6px color-mix(in srgb,var(--plum) 45%,transparent)}
+nav{border:1.5px solid color-mix(in srgb,var(--plum2) 60%,#fff);box-shadow:0 14px 32px -12px color-mix(in srgb,var(--plum) 55%,transparent)}
+nav button.on{color:var(--onp);background:linear-gradient(135deg,var(--plum),color-mix(in srgb,var(--plum) 55%,var(--acc)));box-shadow:0 6px 14px -6px var(--plum)}
+.bar{width:6px;box-shadow:0 0 10px -1px currentColor}
+.cita .hora{font-size:16px}
+.gh{display:flex;align-items:center;gap:11px;margin:-2px 0 6px}
+.gh i{width:38px;height:38px;border-radius:13px;flex:none;display:grid;place-items:center;font-style:normal;font-size:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--plum2) 85%,#fff),color-mix(in srgb,var(--acc) 60%,#fff));box-shadow:0 6px 14px -7px var(--plum),inset 0 1px 0 rgba(255,255,255,.7)}
+.gh h3{font-size:17px;color:var(--ink)}.gh small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.herr-ic{background:linear-gradient(135deg,var(--plum),var(--acc))}
+.tag{background:color-mix(in srgb,var(--plum2) 35%,var(--soft))}
+.dis{border-color:color-mix(in srgb,var(--plum2) 45%,var(--line))}
+.sbtn{border-color:color-mix(in srgb,var(--plum2) 55%,var(--line));background:linear-gradient(160deg,var(--card),color-mix(in srgb,var(--soft) 80%,var(--card)))}
 </style>
 </head>
 <body>
@@ -127,12 +159,12 @@ function logoSVG(a,b,fg){const id='g'+(a+b).replace(/#/g,'');return `<svg viewBo
 function flor(c,sz,op){return `<svg width="${sz}" height="${sz}" viewBox="0 0 40 40" style="opacity:${op||1}"><g fill="${c}">${[0,72,144,216,288].map(r=>`<ellipse cx="20" cy="10" rx="6" ry="9" transform="rotate(${r} 20 20)" opacity=".75"/>`).join('')}</g><circle cx="20" cy="20" r="4.5" fill="#fff"/><circle cx="20" cy="20" r="2.4" fill="${c}"/></svg>`}
 const B={bg:'#fbf7fb',card:'#ffffff',ink:'#4a3a4f',muted:'#9a8a9f',line:'#f1e3ee',onp:'#ffffff',okbg:'#e6f5ef',warnbg:'#fff1e3'};
 const TEMAS={
- algodon:{n:'Algodón de azúcar',v:{...B,plum:'#d46c9b',plum2:'#f2a7c6',soft:'#fdeef5',acc:'#7fb8dc',b1:'#cfe7f8',b2:'#fbd3e4'},lg:['#a9d6f2','#f6a9c8','#fff']},
- cielo:{n:'Cielo celeste',v:{...B,bg:'#f6fafd',ink:'#33465a',muted:'#8195a8',line:'#dcebf6',plum:'#5a9fcf',plum2:'#9cccec',soft:'#e8f3fb',acc:'#f0a0c2',b1:'#cde6f7',b2:'#fde2ec'},lg:['#c4e5f8','#78b4dd','#fff']},
- rosa:{n:'Rosa bebé',v:{...B,bg:'#fff7fa',ink:'#4d3640',muted:'#a08893',line:'#f8e0ea',plum:'#e07aa5',plum2:'#f7b8d0',soft:'#ffeef4',acc:'#f3b896',b1:'#ffe3ee',b2:'#fcd0e0'},lg:['#ffcadd','#e88ab1','#fff']},
- lavanda:{n:'Lavanda',v:{...B,bg:'#faf7fe',ink:'#3f3550',muted:'#9389a6',line:'#e9e1f7',plum:'#9b7fd1',plum2:'#c8b6ef',soft:'#f1ecfd',acc:'#f2a7c6',b1:'#e5dcfb',b2:'#fbd8e8'},lg:['#d6c8f6','#f3b4cf','#fff']},
- durazno:{n:'Durazno y menta',v:{...B,bg:'#fffaf6',ink:'#4c3a33',muted:'#a08b80',line:'#f6e4da',plum:'#e08a70',plum2:'#f6c1ae',soft:'#fff0e9',acc:'#7fcab5',b1:'#d6f1e9',b2:'#fde0d4'},lg:['#ffd3c2','#9ad8c6','#fff']},
- noche:{n:'Noche rosé',v:{bg:'#1d1a26',card:'#272333',ink:'#f5e9f0',muted:'#b3a6bb',line:'#3a3448',plum:'#f0a7c4',plum2:'#f7c9db',soft:'#352d40',onp:'#2a1f2e',acc:'#9cc9ea',b1:'#2c3550',b2:'#47304a',okbg:'#213a33',warnbg:'#3e3022'},lg:['#3b3560','#c97aa0','#fff']}
+ algodon:{n:'Algodón de azúcar',v:{...B,plum:'#d24f8b',plum2:'#f08bb6',soft:'#fde4ef',acc:'#5aa7dc',b1:'#b6daf6',b2:'#f9bcd6'},lg:['#a9d6f2','#f6a9c8','#fff']},
+ cielo:{n:'Cielo celeste',v:{...B,bg:'#f6fafd',ink:'#33465a',muted:'#8195a8',line:'#dcebf6',plum:'#3888c4',plum2:'#80bbe8',soft:'#dfeefb',acc:'#ea80ae',b1:'#b3d9f5',b2:'#fbcde0'},lg:['#c4e5f8','#78b4dd','#fff']},
+ rosa:{n:'Rosa bebé',v:{...B,bg:'#fff7fa',ink:'#4d3640',muted:'#a08893',line:'#f8e0ea',plum:'#da5b92',plum2:'#f49bbf',soft:'#ffe4ee',acc:'#f09a72',b1:'#ffd0e2',b2:'#fab8d1'},lg:['#ffcadd','#e88ab1','#fff']},
+ lavanda:{n:'Lavanda',v:{...B,bg:'#faf7fe',ink:'#3f3550',muted:'#9389a6',line:'#e9e1f7',plum:'#8562cc',plum2:'#bba1ef',soft:'#ece4fd',acc:'#ec8ab6',b1:'#d6c7fa',b2:'#f8c5dd'},lg:['#d6c8f6','#f3b4cf','#fff']},
+ durazno:{n:'Durazno y menta',v:{...B,bg:'#fffaf6',ink:'#4c3a33',muted:'#a08b80',line:'#f6e4da',plum:'#da6e52',plum2:'#f3a993',soft:'#ffe7dc',acc:'#56bd9f',b1:'#d6f1e9',b2:'#fde0d4'},lg:['#ffd3c2','#9ad8c6','#fff']},
+ noche:{n:'Noche rosé',v:{bg:'#1d1a26',card:'#272333',ink:'#f5e9f0',muted:'#b3a6bb',line:'#3a3448',plum:'#f58fba',plum2:'#f9b9d3',soft:'#352d40',onp:'#2a1f2e',acc:'#7fbdec',b1:'#2c3550',b2:'#47304a',okbg:'#213a33',warnbg:'#3e3022'},lg:['#3b3560','#c97aa0','#fff']}
 };
 const RUB={unas:['Uñas','#c2477f'],pestanas:['Pestañas y cejas','#6a4fb3'],pelo:['Peluquería','#c0812b']};
 const hex=s=>Array.from(new TextEncoder().encode(s)).map(b=>b.toString(16).padStart(2,'0')).join('');
