@@ -198,7 +198,7 @@ async function cargar(){
   V('<div class="hero"><p class="muted">Cargando…</p></div>');
   try{const j=await api({accion:'publico',b:codigo});
     if(!j.ok){pantalla('No encontramos este salón','Revisa el enlace o pídele uno nuevo.');return}
-    P=j.perfil||{};ocupado=j.ocupado||[];ahora=j.ahora;cargado=Date.now();
+    P=j.perfil||{};MAXD=+P.dd||90;ocupado=j.ocupado||[];ahora=j.ahora;cargado=Date.now();
     tema();document.title='Reserva en '+(P.n||'tu salón');
     if(!j.activo){pantalla('Reservas en pausa','Por ahora no se puede reservar en línea. Escríbele directo al salón.',true);return}
     render();
@@ -212,7 +212,7 @@ function sel(){const s=X()[r.i];if(!s)return null;const v=(s.v||[])[r.v],g=(s.g|
   const it=(P.s||[])[idx];return it?{idx,lab:it[0],p:+it[1]||0,m:+it[2]||30,s}:null}
 function hoyF(){return ahora&&ahora.f?ahora.f:ymd(new Date())}
 function minAhora(){if(ahora&&ahora.m!=null)return ahora.m+Math.floor((Date.now()-cargado)/60000);const d=new Date();return d.getHours()*60+d.getMinutes()}
-const MAXD=90;
+let MAXD=90;
 function abierto(f){const ds=P.d&&P.d.length?P.d:[1,2,3,4,5,6];const d=new Date(f+'T12:00');const lim=new Date(hoyF()+'T12:00');lim.setDate(lim.getDate()+MAXD);return f>=hoyF()&&d<=lim&&ds.includes(d.getDay())}
 function diasDisp(){const out=[],b=new Date(hoyF()+'T12:00');for(let i=0;i<=MAXD;i++){const d=new Date(b);d.setDate(b.getDate()+i);const f=ymd(d);if(abierto(f))out.push(f)}return out}
 function calendario(m){

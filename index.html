@@ -179,6 +179,54 @@ nav button.on{color:var(--onp);background:linear-gradient(135deg,var(--plum),col
 .barra{margin:10px 0 2px}.barra i{display:block;height:10px;border-radius:99px;margin-top:5px;box-shadow:0 3px 8px -3px currentColor}
 .prox{margin-top:10px;background:rgba(255,255,255,.72);border-radius:14px;padding:8px 12px;font-size:14px;color:var(--ink)}
 nav button{font-size:10.5px;padding:7px 1px}
+/* ---------- Reservas estilo Silla ---------- */
+nav button{font-size:9.6px;padding:7px 0;letter-spacing:.1px}nav svg{width:21px;height:21px}
+nav button.fab{flex:1.15;background:none!important;box-shadow:none!important;color:var(--plum);font-weight:800;overflow:visible}
+nav .orb{width:52px;height:52px;margin:-30px auto 1px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),transparent 42%),linear-gradient(140deg,var(--plum),color-mix(in srgb,var(--plum) 45%,var(--acc)));box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 6.5px color-mix(in srgb,var(--plum2) 70%,transparent),0 12px 22px -6px var(--plum);transition:transform .2s}
+nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(-3px) scale(1.05);box-shadow:0 0 0 5px color-mix(in srgb,var(--card) 92%,transparent),0 0 0 7px var(--plum2),0 0 26px 2px color-mix(in srgb,var(--plum) 55%,transparent)}
+.rhero{position:relative;overflow:hidden;border-radius:26px;padding:18px 16px 16px;margin-bottom:12px;color:var(--ink);
+ background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--acc) 40%,transparent),transparent 60%),radial-gradient(90% 80% at 0% 100%,color-mix(in srgb,var(--plum2) 55%,transparent),transparent 65%),linear-gradient(150deg,color-mix(in srgb,var(--b2) 85%,var(--card)),color-mix(in srgb,var(--card) 70%,var(--b1)));
+ border:1.5px solid color-mix(in srgb,var(--plum2) 70%,transparent);box-shadow:0 22px 40px -22px var(--plum),inset 0 1px 0 rgba(255,255,255,.6)}
+.rhero::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.55) 1.1px,transparent 1.6px);background-size:14px 14px;-webkit-mask-image:linear-gradient(160deg,#000,transparent 55%);mask-image:linear-gradient(160deg,#000,transparent 55%)}
+.rhero::after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:repeating-linear-gradient(135deg,var(--plum) 0 10px,#fff 10px 15px,var(--acc) 15px 25px,#fff 25px 30px);opacity:.75}
+.rhero>*{position:relative}.rhero .spk{position:absolute;color:#fff;font-size:15px;text-shadow:0 0 10px var(--plum2);opacity:.9}
+.rav{width:68px;height:68px;border-radius:50%;padding:3px;flex:none;background:conic-gradient(from 200deg,var(--plum),var(--acc),var(--plum2),var(--plum));box-shadow:0 10px 22px -8px var(--plum)}
+.rav>div{width:100%;height:100%;border-radius:50%;border:3px solid var(--card);background:linear-gradient(145deg,var(--soft),var(--card));display:grid;place-items:center;overflow:hidden;font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:var(--plum)}
+.rav img{width:100%;height:100%;object-fit:cover}
+.eyebrow{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800;color:var(--plum);opacity:.9}
+.rname{font-family:'Playfair Display',Georgia,serif;font-size:26px;line-height:1.1;margin:3px 0 0;color:var(--ink);overflow-wrap:anywhere}
+.online{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;color:#1f9a5c;background:rgba(255,255,255,.75);border:1px solid rgba(31,154,92,.25);padding:3px 9px;border-radius:99px;white-space:nowrap}
+.online i{width:7px;height:7px;border-radius:50%;background:#22c06c;box-shadow:0 0 0 0 rgba(34,192,108,.6);animation:pul 1.8s infinite}
+@keyframes pul{70%{box-shadow:0 0 0 7px rgba(34,192,108,0)}100%{box-shadow:0 0 0 0 rgba(34,192,108,0)}}
+.rdesc{font-size:14px;line-height:1.45;margin:12px 0 10px;color:color-mix(in srgb,var(--ink) 82%,transparent)}
+.rlink{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:color-mix(in srgb,var(--card) 70%,transparent)!important;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)!important;border:1.5px dashed color-mix(in srgb,var(--plum) 45%,transparent);color:var(--ink);border-radius:14px;padding:11px 13px;font-size:14px;font-weight:700;text-align:left}
+.rlink span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rlink svg{flex:none;color:var(--plum)}
+.rbig{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 8px;border-radius:16px;font-size:14.5px;font-weight:800;letter-spacing:.3px;text-decoration:none;color:var(--onp,#fff)}
+.rbig.ghostb{background:color-mix(in srgb,var(--card) 85%,transparent)!important;color:var(--ink);border:1.5px solid color-mix(in srgb,var(--plum2) 70%,transparent);box-shadow:0 6px 14px -8px var(--plum)!important}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.rstats div{text-align:center;padding:12px 6px;border-radius:18px;border:1.5px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(150deg,var(--plum2),color-mix(in srgb,var(--acc) 60%,#fff)) border-box;box-shadow:0 10px 20px -14px var(--plum)}
+.rstats b{display:block;font-family:'Playfair Display',Georgia,serif;font-size:24px;color:var(--plum);line-height:1.1}.rstats span{font-size:11.5px;color:var(--muted);line-height:1.2;display:block;margin-top:3px}
+.sec{display:flex;align-items:center;gap:10px;margin:18px 2px 10px;font-size:12.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--plum)}
+.sec::after{content:"";flex:1;height:2px;border-radius:2px;background:linear-gradient(90deg,color-mix(in srgb,var(--plum) 60%,transparent),transparent)}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stile{--c:var(--plum);--g:linear-gradient(140deg,var(--plum),var(--acc));position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px 4px 12px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:800;color:var(--c)!important;
+ background:radial-gradient(110% 70% at 50% 0%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%),color-mix(in srgb,var(--card) 92%,transparent)!important;border:1.5px solid color-mix(in srgb,var(--c) 35%,transparent);box-shadow:0 10px 18px -12px var(--c),inset 0 1px 0 rgba(255,255,255,.6)!important;transition:transform .15s}
+.stile:active{transform:scale(.95)}
+.stile i{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.45),transparent 45%),var(--g);box-shadow:0 8px 16px -6px var(--c),inset 0 -2px 0 rgba(0,0,0,.08)}
+.stile i svg{width:22px;height:22px}
+.stile.wa{--c:#1fa855;--g:linear-gradient(140deg,#34d97a,#14a24f)}.stile.ig{--c:#d6297b;--g:linear-gradient(45deg,#f9b233,#ee2a7b 45%,#8a3ab9)}.stile.fb{--c:#1877f2;--g:linear-gradient(140deg,#4b9bff,#1460d8)}
+.stile.tg{--c:#229ed9;--g:linear-gradient(140deg,#4fc3f7,#1d8fd0)}.stile.cp{--c:var(--plum)}.stile.mas{--c:color-mix(in srgb,var(--plum) 55%,var(--acc));--g:linear-gradient(140deg,var(--acc),var(--plum))}
+.rguia{width:100%;margin-top:10px;display:flex;align-items:center;gap:8px;text-align:left;font-size:13px;font-weight:600;color:var(--ink)!important;background:color-mix(in srgb,var(--soft) 80%,transparent)!important;box-shadow:none!important;border:1px solid color-mix(in srgb,var(--plum2) 50%,transparent);border-radius:14px;padding:11px 13px}.rguia em{font-style:normal;flex:1}.rguia span{margin-left:auto;color:var(--plum);font-size:18px}
+.rqr{display:flex;gap:14px;align-items:center}.rqr h3{font-size:16.5px;margin:0 0 4px;color:var(--ink)}.rqr p{font-size:13px;margin:0 0 10px;line-height:1.4}
+.qrbox{flex:none;padding:9px;border-radius:20px;background:linear-gradient(140deg,var(--plum),var(--acc));box-shadow:0 12px 24px -10px var(--plum)}
+.qrbox #qr{background:#fff;padding:8px;border-radius:13px;min-width:118px;min-height:118px;display:grid;place-items:center}
+.rprox{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer}.rprox:last-child{border:0}
+.rprox .dch{width:46px;flex:none;text-align:center;border-radius:13px;padding:5px 0;color:#fff;background:linear-gradient(150deg,var(--plum),color-mix(in srgb,var(--plum) 50%,var(--acc)));box-shadow:0 6px 12px -6px var(--plum)}
+.rprox .dch b{display:block;font-size:18px;line-height:1}.rprox .dch span{font-size:10.5px;text-transform:uppercase;font-weight:700;opacity:.9}
+.rprox .hr{font-weight:800;color:var(--plum);background:var(--soft);padding:5px 10px;border-radius:10px}
+.rconf select{width:100%}.dias7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:4px}
+.dias7 button{padding:10px 0;border-radius:12px;font-size:13px;font-weight:800;background:color-mix(in srgb,var(--soft) 80%,var(--card))!important;color:var(--muted);box-shadow:none!important;border:1.5px solid var(--line)}
+.dias7 button.on{color:#fff;border-color:transparent;background:linear-gradient(150deg,var(--plum),color-mix(in srgb,var(--plum) 55%,var(--acc)))!important;box-shadow:0 6px 12px -6px var(--plum)!important}
 </style>
 </head>
 <body>
@@ -308,15 +356,16 @@ function libres(fecha,minutos,ignorar){
 // ---------- navegación ----------
 const TABS=[
  ['agenda','Agenda','<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
- ['reservar','Reservar','<path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>'],
- ['catalogo','Catálogo','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'],
  ['clientas','Clientas','<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],
+ ['catalogo','Catálogo','<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'],
+ ['reservar','Reservas','<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'],
  ['caja','Caja','<rect x="2.5" y="6" width="19" height="13" rx="3"/><circle cx="12" cy="12.5" r="2.6"/><path d="M6 9.5v.01M18 15.5v.01"/>'],
- ['servicios','Servicios','<path d="M4 6h16M4 12h16M4 18h10"/>']
+ ['servicios','Servicios','<path d="M4 6h16M4 12h16M4 18h10"/>'],
+ ['ajustes','Ajustes','<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>']
 ];
 let tab='agenda',dia=ymd(hoy());
 function go(t){tab=t;render();window.scrollTo(0,0)}
-function renderNav(){document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
+function renderNav(){document.getElementById('nav').innerHTML=TABS.map(([k,n,ic])=>k==='reservar'?`<button class="fab ${tab===k?'on':''}" onclick="go('${k}')"><span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>${n}</button>`:`<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${n}</button>`).join('')}
 function render(){aplicarTema();document.getElementById('hName').textContent=st.negocio.nombre;document.getElementById('hLogo').innerHTML=miLogo();if(st.negocio.bienvenida){document.getElementById('nav').innerHTML='';return vBienvenida()}if(plan().estado==='bloqueado'){document.getElementById('nav').innerHTML='';return vBloqueo()}renderNav();({agenda:vAgenda,reservar:vReservar,catalogo:vCatalogo,clientas:vClientas,caja:vCaja,servicios:vServicios,ajustes:vAjustes})[tab]()}
 const V=h=>document.getElementById('view').innerHTML=h;
 
@@ -408,7 +457,7 @@ function vReservar(){
   const head=`<div class="card" style="background:var(--soft);border:0"><b>Así lo ve tu clienta</b><div class="muted">En la app real esto es tu enlace de reservas para Instagram, WhatsApp o Facebook. Las reservas caen directo en tu Agenda.</div></div>`;
   const back=r.paso?`<button class="ghost sm" onclick="r.paso--;render()">‹ Atrás</button>`:'';
   if(r.paso===0){
-    V(compartirHTML()+(L.codigo?`<p class="muted" style="text-align:center">Toca <b>Probar</b> para ver tu página como la ve tu clienta.</p>`:''));
+    V(compartirHTML());
     return;
   }
   const s=svc(r.servicioId);const c=calc(s,r.variante,r.extras,r.disenoId,st.catalogo);const dis=st.catalogo.filter(d=>d.servicioId===s.id);
@@ -478,26 +527,62 @@ function compartirHTML(){
   if(!normTel(st.negocio.whatsapp))return `<div class="card"><b>Tu enlace de reservas</b><p class="muted">Escribe tu WhatsApp para crear el enlace que compartes en Instagram, WhatsApp, Facebook y Telegram.</p><input inputmode="tel" placeholder="9 1234 5678" onchange="st.negocio.whatsapp=this.value;save();render()"></div>`;
   if(!st.negocio.registrado)return regHTML('Activa tu enlace de reservas','Tus clientas reservan solas y la hora queda en tu agenda al tiro. Empiezas con 30 días gratis.');
   if(!L.codigo)return `<div class="card"><b>Tu enlace de reservas</b><p class="muted">Conéctate a internet para crear tu enlace.</p><button style="width:100%" onclick="verificar(true)">Crear mi enlace</button></div>`;
-  const LK=enlaceReserva(),n=st.negocio.nombre,u=encodeURIComponent(LK),msg='✨ Reserva tu hora en '+n+'\n👇 Aprieta aquí para reservar:\n';
+  const N=st.negocio,LK=enlaceReserva(),n=N.nombre||'Mi salón',u=encodeURIComponent(LK),msg='✨ Reserva tu hora en '+n+'\n👇 Aprieta aquí para reservar:\n';
+  const h0=ymd(hoy()),mes=h0.slice(0,7),enl=st.citas.filter(c=>c.origen==='enlace'&&c.estado!=='cancelada');
+  const prox=enl.filter(c=>c.estado==='agendada'&&c.fecha>=h0).sort((a,b)=>(a.fecha+hm(a.inicio)).localeCompare(b.fecha+hm(b.inicio)));
+  const delMes=enl.filter(c=>c.fecha.slice(0,7)===mes),gen=delMes.filter(c=>c.estado!=='novino').reduce((t,c)=>t+(+c.precio||0),0);
+  const dtxt=[1,2,3,4,5,6,0].filter(d=>N.dias.includes(d)).map(d=>DIAS[d]).join(' · ')||'sin días';
+  const sel=(v,ops,on)=>`<select onchange="${on}">${ops.map(([k,t])=>`<option value="${k}" ${String(k)===String(v)?'selected':''}>${t}</option>`).join('')}</select>`;
+  const am=+((N.alm||{}).m)||0;
+  const tile=(cls,ic,t,act)=>`<${act.startsWith('http')?`a href="${act}" target="_blank" rel="noopener"`:`button onclick="${act}"`} class="stile ${cls}"><i>${ic}</i><span>${t}</span></${act.startsWith('http')?'a':'button'}>`;
   setTimeout(pintarQR,0);
-  return `<div class="card"><b>Tu enlace de reservas</b><p class="muted" style="margin:4px 0 10px">Tus clientas eligen servicio, diseño, día y hora libre, y la reserva queda en tu agenda al tiro. Te avisamos con una notificación y por correo.</p>
-  <textarea class="linkta" readonly onfocus="this.select()" style="width:100%;height:58px;font-size:12px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--muted);resize:none">${esc(LK)}</textarea>
-  <div class="share">
-   <button class="sbtn" onclick="copiarEnlace()">${sic('copy')}Copiar</button>
-   <a class="sbtn" style="color:#1fa855" href="https://wa.me/?text=${encodeURIComponent(msg+LK)}" target="_blank" rel="noopener">${sic('wa')}WhatsApp</a>
-   <a class="sbtn" style="color:#2aa3df" href="https://t.me/share/url?url=${u}&text=${encodeURIComponent('Reserva tu hora en '+n)}" target="_blank" rel="noopener">${sic('tg')}Telegram</a>
-   <a class="sbtn" style="color:#1877f2" href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">${sic('fb')}Facebook</a>
-   <button class="sbtn" style="color:#d6297b" onclick="instaHistoria()">${sic('ig')}Instagram</button>
-   <a class="sbtn" href="${esc(LK)}" target="_blank" rel="noopener">${sic('link')}Probar</a>
+  return `<div class="rhero">
+   <span class="spk" style="right:18px;top:62px">✦</span><span class="spk" style="right:54px;top:98px;font-size:10px">✦</span>
+   <div class="row" style="gap:14px;align-items:center">
+    <div class="rav"><div>${N.logo?`<img src="${N.logo}" alt="">`:esc(n.trim().charAt(0).toUpperCase())}</div></div>
+    <div style="flex:1;min-width:0"><div class="row between" style="align-items:flex-start;gap:6px"><span class="eyebrow">Tu página de reservas</span><span class="online"><i></i>En línea</span></div>
+     <h2 class="rname">${esc(n)}</h2></div></div>
+   <p class="rdesc">Tus clientas eligen servicio, diseño, día y hora libre, y la reserva cae sola en tu agenda. Atiendes <b>${dtxt}</b> · ${N.inicio} a ${N.fin}${almuerzo()?` · almuerzo ${textoAlm()}`:''}.</p>
+   <button class="rlink" onclick="copiarEnlace()"><span>${esc(LK.replace(/^https?:\/\//,''))}</span>${sic('copy')}</button>
+   <textarea class="linkta" readonly style="position:absolute;left:-9999px;opacity:0">${esc(LK)}</textarea>
+   <div class="row" style="gap:10px;margin-top:12px"><button class="rbig" onclick="compartirNativo()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>Compartir</button>
+   <a class="rbig ghostb" href="${esc(LK)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Ver mi página</a></div>
   </div>
-  <button class="ghost" style="width:100%;margin-bottom:12px" onclick="guiaRedes()">Cómo ponerlo en cada red (botón "Reserva aquí")</button>
-  <div style="text-align:center"><div id="qr" style="display:inline-block;background:#fff;padding:12px;border-radius:12px;min-height:40px"></div><div class="row" style="justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="sm" onclick="compartirImagen('post')">Compartir QR</button><button class="ghost sm" onclick="guardarQR()">Guardar imagen</button></div><p class="muted" style="margin-top:6px">Imagen lista con tu nombre y QR para Instagram, Facebook, WhatsApp o para imprimir en tu local.</p></div>
-  <p class="muted">Si cambias servicios, precios u horario, tu enlace se actualiza solo.</p></div>`;
+  <div class="rstats"><div><b>${prox.length}</b><span>próximas por enlace</span></div><div><b>${delMes.length}</b><span>reservas este mes</span></div><div><b>${clp(gen)}</b><span>generado este mes</span></div></div>
+  <div class="sec">Compartir en</div>
+  <div class="sgrid">
+   ${tile('wa',sic('wa'),'WhatsApp','https://wa.me/?text='+encodeURIComponent(msg+LK))}
+   ${tile('ig',sic('ig'),'Instagram','instaHistoria()')}
+   ${tile('fb',sic('fb'),'Facebook','https://www.facebook.com/sharer/sharer.php?u='+u)}
+   ${tile('tg',sic('tg'),'Telegram','https://t.me/share/url?url='+u+'&text='+encodeURIComponent('Reserva tu hora en '+n))}
+   ${tile('cp',sic('copy'),'Copiar','copiarEnlace()')}
+   ${tile('mas','<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.3M8.3 13.2l7.4 4.3"/></svg>','Más apps','compartirNativo()')}
+  </div>
+  <button class="rguia" onclick="guiaRedes()"><em>💡 Cómo poner el botón <b>"Reserva aquí"</b> en cada red</em><span>›</span></button>
+  <div class="sec">Código QR</div>
+  <div class="card rqr"><div class="qrbox"><div id="qr" data-s="118"></div></div>
+   <div style="flex:1;min-width:0"><h3>Para tu local y tus historias</h3><p class="muted">Imprímelo en el espejo o en la caja, o súbelo a Instagram. Al escanearlo abre tu página de reservas.</p>
+   <div class="row" style="gap:6px;flex-wrap:wrap"><button class="sm" onclick="compartirImagen('post')">Compartir</button><button class="ghost sm" onclick="guardarQR()">Guardar</button></div></div></div>
+  <div class="sec">Próximas reservas por enlace</div>
+  ${prox.length?`<div class="card" style="padding:6px 14px">${prox.slice(0,6).map(c=>{const k=cli(c.clientaId)||{},sv=svc(c.servicioId),d=new Date(c.fecha+'T12:00');return `<div class="rprox" onclick="dia='${c.fecha}';go('agenda')"><div class="dch"><b>${d.getDate()}</b><span>${d.toLocaleDateString('es-CL',{month:'short'}).replace('.','')}</span></div><div style="flex:1;min-width:0"><b>${esc(k.nombre||'Clienta')}</b><div class="muted">${esc((sv&&sv.nombre)||c.etiqueta||'')} · ${clp(c.precio)}</div></div><span class="hr">${hm(c.inicio)}</span></div>`}).join('')}</div>`:`<div class="card empty" style="padding:18px">Todavía no hay reservas por enlace. Compártelo en tus redes para llenar la agenda ✨</div>`}
+  <div class="sec">Cómo reservan tus clientas</div>
+  <div class="card rconf">
+   <label>Días de atención</label><div class="dias7">${[1,2,3,4,5,6,0].map(d=>`<button class="${N.dias.includes(d)?'on':''}" onclick="togDia(${d})">${DIAS[d]}</button>`).join('')}</div>
+   <div class="row"><div style="flex:1"><label>Abre</label><input type="time" value="${N.inicio}" onchange="st.negocio.inicio=this.value;save();render()"></div><div style="flex:1"><label>Cierra</label><input type="time" value="${N.fin}" onchange="st.negocio.fin=this.value;save();render()"></div></div>
+   <div class="row"><div style="flex:1"><label>Hora de almuerzo</label>${sel(am,[[0,'Sin almuerzo'],[30,'30 min'],[60,'1 hora'],[90,'1 h 30'],[120,'2 horas']],"setAlm('m',this.value)")}</div><div style="flex:1"><label>Desde las</label><input type="time" step="900" value="${(N.alm||{}).h||'13:00'}" ${am?'':'disabled'} onchange="setAlm('h',this.value)"></div></div>
+   <label>Pueden reservar hasta</label>${sel(+N.dd||90,[[14,'2 semanas adelante'],[30,'1 mes adelante'],[60,'2 meses adelante'],[90,'3 meses adelante']],"st.negocio.dd=+this.value;save();toast('Guardado')")}
+   <label>Anticipación mínima para reservar</label>${sel(+N.ant||30,[[15,'15 minutos antes'],[30,'30 minutos antes'],[60,'1 hora antes'],[120,'2 horas antes'],[240,'4 horas antes'],[1440,'1 día antes']],"st.negocio.ant=+this.value;save();toast('Guardado')")}
+   <label>Tu WhatsApp (botón de contacto en tu página)</label><input inputmode="tel" placeholder="9 1234 5678" value="${esc(N.whatsapp)}" onchange="st.negocio.whatsapp=this.value;save()">
+   <label>Correo para avisos (cada reserva y resumen de la mañana)</label><input type="email" inputmode="email" placeholder="tucorreo@gmail.com" value="${esc(N.correo||'')}" onchange="st.negocio.correo=this.value.trim();save();verificar()">
+   <div style="margin-top:12px">${notifHTML()}</div>
+   <p class="muted" style="margin:10px 0 0;font-size:12.5px">Los cambios se actualizan solos en tu página. Precios y servicios se editan en <b>Servicios</b>.</p>
+  </div>`;
 }
+function compartirNativo(){const LK=enlaceReserva(),n=st.negocio.nombre||'mi salón';if(navigator.share){navigator.share({title:n,text:'✨ Reserva tu hora en '+n,url:LK}).catch(()=>{})}else copiarEnlace()}
 let qrCargando=false;
 function pintarQR(){
   const el=document.getElementById('qr');if(!el)return;
-  const go=()=>{try{el.innerHTML='';new window.QRCode(el,{text:enlaceReserva(),width:460,height:460,colorDark:'#000000',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.L});const im=el.querySelectorAll('img,canvas');im.forEach(x=>{x.style.width='220px';x.style.height='220px'})}catch(e){el.innerHTML='<span class="muted">El enlace es muy largo para QR: comparte el enlace.</span>'}};
+  const go=()=>{try{el.innerHTML='';new window.QRCode(el,{text:enlaceReserva(),width:460,height:460,colorDark:'#000000',colorLight:'#ffffff',correctLevel:window.QRCode.CorrectLevel.L});const im=el.querySelectorAll('img,canvas');const z=(+el.dataset.s||220)+'px';im.forEach(x=>{x.style.width=z;x.style.height=z})}catch(e){el.innerHTML='<span class="muted">El enlace es muy largo para QR: comparte el enlace.</span>'}};
   if(window.QRCode)return go();if(qrCargando)return;qrCargando=true;
   const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
   sc.onload=()=>{qrCargando=false;pintarQR()};sc.onerror=()=>{qrCargando=false;const e=document.getElementById('qr');if(e)e.innerHTML='<span class="muted">Sin internet para el QR</span>'};
@@ -680,7 +765,7 @@ function programarSync(){clearTimeout(syncT);syncT=setTimeout(sincronizar,3000)}
 async function sincronizar(){
   if(!st.negocio.registrado||!L.codigo||!navigator.onLine||sincronizando)return;sincronizando=true;
   try{const N=st.negocio,h0=ymd(hoy()),c=catalogoReserva(true);
-    const perfil={n:N.nombre,b:N.dueña||'',w:normTel(N.whatsapp),i:N.inicio,f:N.fin,v:15,d:N.dias,tema:N.tema,ant:+N.ant||30,al:almuerzo(),app:'mimo',s:c.flat,x:c.x};
+    const perfil={n:N.nombre,b:N.dueña||'',w:normTel(N.whatsapp),i:N.inicio,f:N.fin,v:15,d:N.dias,tema:N.tema,ant:+N.ant||30,dd:+N.dd||90,al:almuerzo(),app:'mimo',s:c.flat,x:c.x};
     const ocupado=st.citas.filter(x=>x.fecha>=h0&&x.estado!=='cancelada').map(x=>[x.fecha,hm(x.inicio),+x.dur||30,x.id,((cli(x.clientaId)||{}).nombre||'').split(' ')[0]]);
     const r0=await fetch(API,{method:'POST',body:JSON.stringify({accion:'perfil',id:L.id,correo:N.correo||'',perfil,ocupado})});
     const j=await r0.json();if(j&&j.codigo&&j.codigo!==L.codigo){L.codigo=j.codigo;saveL();if(tab==='reservar')render()}
