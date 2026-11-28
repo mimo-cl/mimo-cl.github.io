@@ -45,16 +45,17 @@ ol{margin:10px 0 0;padding-left:22px}li{margin:7px 0}
 <p class="sub">La agenda de belleza donde tus clientas reservan solas</p>
 <span class="badge">✨ 30 días gratis · sin tarjeta</span>
 
+<div id="inapp" class="card hide" style="background:#fff4d6;border-color:#f5c451;text-align:center"><b>📲 Ábrelo en tu navegador</b><p class="muted" style="margin:6px 0 0">Estás dentro de TikTok o Instagram. Toca los <b>3 puntos ⋯</b> arriba a la derecha y elige <b>"Abrir en el navegador"</b> (Chrome o Safari) para instalar Mimo.</p><button class="btn sec" onclick="copiar()">Copiar enlace</button></div>
 <div class="tabs"><button id="tA" onclick="ver('a')">🤖 Android</button><button id="tI" onclick="ver('i')">🍎 iPhone</button></div>
 
 <div id="vA" class="card">
- <a class="btn" href="app/Mimo.apk" download="Mimo.apk">⬇️ Descargar Mimo para Android</a>
- <ol>
-  <li>Toca <b>Descargar</b> y abre el archivo <b>Mimo.apk</b>.</li>
-  <li>Si te lo pide, toca <b>Configuración</b> → activa <b>"Permitir de esta fuente"</b>.</li>
-  <li>Toca <b>Instalar</b>. ¡Lista! 💅</li>
+ <button class="btn" id="bInst" onclick="instalar()">⬇️ Instalar Mimo gratis</button>
+ <ol id="pasosA">
+  <li>Toca <b>Instalar Mimo gratis</b> y luego <b>Instalar</b>.</li>
+  <li>Si no aparece, toca los <b>3 puntos ⋮</b> de Chrome → <b>"Instalar app"</b> o <b>"Agregar a pantalla principal"</b>.</li>
+  <li>¡Lista! Mimo queda en tu inicio como una app 💅</li>
  </ol>
- <a class="btn sec" href="./">O úsala sin descargar (desde Chrome)</a>
+ <a class="btn sec" href="./">Abrir Mimo ahora</a>
 </div>
 
 <div id="vI" class="card hide">
@@ -85,6 +86,13 @@ function ver(k){document.getElementById('vA').classList.toggle('hide',k!=='a');d
 function copiar(){navigator.clipboard.writeText('https://mimo-cl.github.io/descargar').then(()=>alertita('Enlace copiado: pégalo en Safari')).catch(()=>{})}
 function alertita(t){const d=document.createElement('div');d.textContent=t;d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4a3a4f;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:9';document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
 ver(ios?'i':'a');
+if(/musical_ly|Bytedance|TikTok|Instagram|FBAN|FBAV/i.test(ua))document.getElementById('inapp').classList.remove('hide');
+let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
+window.addEventListener('appinstalled',()=>alertita('¡Mimo quedó instalada! Búscala en tu inicio 💅'));
+function instalar(){if(dp){dp.prompt();dp.userChoice.finally(()=>dp=null);return}
+ if(window.matchMedia('(display-mode: standalone)').matches){location.href='./';return}
+ alertita('Toca ⋮ arriba → "Instalar app"');}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 if(!movil){document.getElementById('vD').classList.remove('hide');const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=()=>new QRCode(document.getElementById('qr'),{text:'https://mimo-cl.github.io/descargar',width:180,height:180});document.head.appendChild(s)}
 </script>
 </body>
