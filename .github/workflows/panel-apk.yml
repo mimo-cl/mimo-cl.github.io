@@ -21,11 +21,11 @@ jobs:
         with:
           gradle-version: '8.7'
       - name: Compilar APK
-        run: gradle assembleRelease --no-daemon
+        run: gradle assembleDebug --no-daemon
         working-directory: proyecto
       - name: Guardar la APK en panel/panel.apk
         run: |
-          cp proyecto/app/build/outputs/apk/release/app-release.apk panel/panel.apk
+          cp proyecto/app/build/outputs/apk/debug/app-debug.apk panel/panel.apk
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add panel/panel.apk
