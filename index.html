@@ -260,6 +260,15 @@ nav .orb svg{width:24px;height:24px}nav button.fab.on .orb{transform:translateY(
 .pubmas b{font-size:14.5px}.pubmas small{font-size:12px;color:var(--muted);font-weight:500;line-height:1.3}
 .pubban{display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 14px}.pubban i{--c:#e0702a}
 .card.pro{background:linear-gradient(135deg,#fff8e6,#ffeef5) padding-box,linear-gradient(140deg,#ffd76a,#f6a9c8) border-box!important}
+.fi-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.fi-av{width:56px;height:56px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;color:#fff;background:linear-gradient(140deg,var(--plum),var(--acc));box-shadow:0 8px 16px -8px var(--plum)}
+.fi-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}.fi-stats div{text-align:center;background:var(--soft);border-radius:16px;padding:10px 4px}.fi-stats b{display:block;color:var(--plum);font-size:17px}.fi-stats span{font-size:11.5px;color:var(--muted)}
+.fi-datos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.fi-datos div{border:1px solid var(--line);border-radius:14px;padding:8px 10px}.fi-datos span{display:block;font-size:11.5px;color:var(--muted)}.fi-datos b{font-size:13.5px}
+.fi-ideas{display:flex;flex-direction:column;gap:8px;margin:10px 0}.fi-ideas>div{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:color-mix(in srgb,var(--soft) 80%,var(--card))}.fi-ideas>div>span{font-size:22px}.fi-ideas p{flex:1;margin:0}.fi-ideas small{display:block;color:var(--muted);font-size:12px}
+.fi-hist{display:flex;flex-direction:column;gap:6px}.fh{display:flex;align-items:center;gap:10px;font-size:13.5px;padding:7px 0;border-bottom:1px dashed var(--line)}.fh span{color:var(--muted);width:62px;flex:none}.fh b{flex:1;font-weight:600}.fh em{font-style:normal}
+.racha{margin-top:8px;font-size:13px;background:rgba(255,255,255,.7);border-radius:12px;padding:6px 10px}
+.igpasos{margin:0 0 10px;padding-left:20px;line-height:1.55}.igpasos li{margin:4px 0}
+.iglink{background:var(--soft);border:1.5px dashed color-mix(in srgb,var(--plum) 45%,transparent);border-radius:12px;padding:9px 12px;font-weight:700;text-align:center;word-break:break-all}
 </style>
 </head>
 <body>
@@ -424,7 +433,7 @@ function vAgenda(){
   const jornada=toMin(st.negocio.fin)-toMin(st.negocio.inicio);
   const esHoy=dia===ymd(hoy()),h=new Date().getHours(),saludo=h<12?'Buenos días':h<20?'Buenas tardes':'Buenas noches';
   const t=TEMAS[st.negocio.tema]||TEMAS.algodon;
-  V(bannerPlan()+bannerPub()+`<div class="card hello">
+  V(bannerPlan()+bannerPub()+cumpleHTML()+`<div class="card hello">
       <span class="deco" style="right:-14px;top:-14px">${flor(t.v.plum2,78,.7)}</span>
       <span class="deco" style="right:58px;top:8px">${flor(t.v.acc,26,.6)}</span>
       <span class="deco sparkle" style="left:58%;bottom:56px;font-size:12px">✦</span>
@@ -449,10 +458,11 @@ function cardCita(c){
   const msg=msgRecordatorio(c,k,s);
   return `<div class="card cita"><div class="bar" style="background:${RUBROS[s.rubro].c}"></div>
     <div class="hora">${hm(c.inicio)}<small>${hm(c.inicio+c.dur)}</small></div>
-    <div style="flex:1"><div class="row between"><b>${esc(k.nombre)}</b>${c.estado==='hecha'?'<span class="tag ok">Atendida</span>':c.estado==='novino'?'<span class="tag warn">No vino</span>':''}</div>
+    <div style="flex:1"><div class="row between"><b style="cursor:pointer" onclick="abrirFichaCli('${k.id}')">${esc(k.nombre)}</b>${c.estado==='hecha'?'<span class="tag ok">Atendida</span>':c.estado==='novino'?'<span class="tag warn">No vino</span>':c.conf?'<span class="tag ok">✓ Confirmó</span>':''}</div>
     <div>${esc(s.nombre)}${c.origen==='enlace'?' <span class="tag ok">reservó en línea</span>':''}</div><div class="muted">${esc(det)}${det?' · ':''}${dur(c.dur)} · ${clp(c.precio)}</div>
     ${c.estado==='agendada'?`<div class="row" style="margin-top:8px;flex-wrap:wrap">
       <a class="btn sm" href="${wa(k.tel,msg)}" target="_blank" rel="noopener">Recordar por WhatsApp</a>
+      ${c.conf?'':`<button class="ghost sm" onclick="confirmo('${c.id}')">✓ Confirmó</button>`}
       <button class="ghost sm" onclick="estado('${c.id}','hecha')">Atendida</button>
       <button class="ghost sm" onclick="estado('${c.id}','novino')">No vino</button>
       <button class="ghost sm" onclick="estado('${c.id}','cancelada')">Cancelar</button></div>`:''}</div></div>`;
@@ -817,12 +827,12 @@ function programarSync(){clearTimeout(syncT);syncT=setTimeout(sincronizar,3000)}
 async function sincronizar(){
   if(!st.negocio.registrado||!L.codigo||!navigator.onLine||sincronizando)return;sincronizando=true;
   try{const N=st.negocio,h0=ymd(hoy()),c=catalogoReserva(true);
-    const perfil={n:N.nombre,b:N.dueña||'',w:normTel(N.whatsapp),i:N.inicio,f:N.fin,v:15,d:N.dias,tema:N.tema,ant:+N.ant||30,dd:+N.dd||90,al:almuerzo(),app:'mimo',s:c.flat,x:c.x};
+    const perfil={n:N.nombre,b:N.dueña||'',w:normTel(N.whatsapp),i:N.inicio,f:N.fin,v:15,d:N.dias,tema:N.tema,ant:+N.ant||30,dd:+N.dd||90,al:almuerzo(),app:'mimo',pu:pubCfg().on?1:0,pd:pubCfg().dias,s:c.flat,x:c.x};
     const ocupado=st.citas.filter(x=>x.fecha>=h0&&x.estado!=='cancelada').map(x=>[x.fecha,hm(x.inicio),+x.dur||30,x.id,((cli(x.clientaId)||{}).nombre||'').split(' ')[0]]);
     const r0=await fetch(API,{method:'POST',body:JSON.stringify({accion:'perfil',id:L.id,correo:N.correo||'',perfil,ocupado})});
     const j=await r0.json();if(j&&j.codigo&&j.codigo!==L.codigo){L.codigo=j.codigo;saveL();if(tab==='reservar')render()}
   }catch(e){}
-  sincronizando=false;
+  sincronizando=false;enviarCatalogo();
 }
 let pidiendo=false;
 async function pedirNuevas(){
@@ -890,6 +900,7 @@ function vCatalogo(){
   const svs=st.servicios.filter(s=>st.negocio.rubros.includes(s.rubro)&&s.activo);
   const tot=st.catalogo.length;
   V(`<h2 class="sectiontitle">Catálogo de diseños</h2><p class="muted" style="margin-top:-4px">Sube todas las fotos que quieras de tus trabajos (se guardan en tu celular). Tu clienta elige el diseño al reservar y el precio y el tiempo extra se suman solos.</p>
+  ${fotosCat().length?`<div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center"><span style="font-size:20px">🌐</span><span class="muted" style="font-size:13px">Tus <b>${Math.min(12,fotosCat().length)}</b> fotos más nuevas se ven en tu página de reservas${fotosCat().length>12?" (máximo 12)":""}.</span></div>`:""}
   <button style="width:100%;margin-bottom:12px" onclick="editDis()">+ Agregar fotos al catálogo</button>
   ${tot?'':'<div class="card empty">'+flor('var(--plum2)',50,.8)+'<p>Aún no tienes diseños. Sube varias fotos de una vez.</p></div>'}
   ${svs.filter(x=>st.catalogo.some(d=>d.servicioId===x.id)).map(x=>{const ds=st.catalogo.filter(d=>d.servicioId===x.id);return `<div class="row between" style="margin:16px 2px 8px"><h3 style="font-size:16px">${esc(x.nombre)} <span class="muted">(${ds.length})</span></h3><button class="ghost sm" onclick="editDis('','${x.id}')">+ Fotos</button></div>
@@ -949,10 +960,10 @@ function pintarCli(){const el=document.getElementById('lcli');if(!el)return;cons
   const l=(window._filas||[]).filter(x=>!q||x.k.nombre.toLowerCase().includes(q)||(qd&&String(x.k.tel||'').replace(/\D/g,'').includes(qd)));
   el.innerHTML=l.map(x=>{const nom=x.k.nombre.split(' ')[0];
     const msg=x.ret?`Hola ${nom}! Ya van a ser ${x.ret.s.retoque} días desde tu ${x.ret.s.nombre.toLowerCase()} en ${st.negocio.nombre}. ¿Te agendo tu retoque? Reserva aquí o respóndeme por acá 💖`:'';
-    return `<div class="card"><div class="row between"><b>${esc(x.k.nombre)}</b>${x.futura?`<span class="tag ok">Próxima: ${hm(x.futura.inicio)} ${new Date(x.futura.fecha+'T12:00').toLocaleDateString('es-CL',{day:'numeric',month:'short'})}</span>`:x.ret?(x.diasRet<=3?`<span class="tag warn">${x.diasRet<0?'Retoque atrasado '+(-x.diasRet)+' d':x.diasRet===0?'Retoque hoy':'Retoque en '+x.diasRet+' d'}</span>`:`<span class="tag">Retoque en ${x.diasRet} d</span>`):''}</div>
+    const dcu=diasACumple(x.k.cu);return `<div class="card"><div class="row between"><b style="cursor:pointer" onclick="abrirFichaCli('${x.k.id}')">${esc(x.k.nombre)}${dcu!=null&&dcu<=7?` <span title="Cumpleaños">🎂${dcu===0?' hoy':''}</span>`:''}</b>${x.futura?`<span class="tag ok">Próxima: ${hm(x.futura.inicio)} ${new Date(x.futura.fecha+'T12:00').toLocaleDateString('es-CL',{day:'numeric',month:'short'})}</span>`:x.ret?(x.diasRet<=3?`<span class="tag warn">${x.diasRet<0?'Retoque atrasado '+(-x.diasRet)+' d':x.diasRet===0?'Retoque hoy':'Retoque en '+x.diasRet+' d'}</span>`:`<span class="tag">Retoque en ${x.diasRet} d</span>`):''}</div>
     ${sellosHTML(x.hechas)}${x.novino?`<div class="muted" style="color:var(--warn)">No vino ${x.novino} ${x.novino===1?'vez':'veces'}</div>`:''}
     <div class="muted">${x.ult?'Último: '+esc(svc(x.ult.servicioId)?.nombre||'')+' · ':''}Total gastado ${clp(x.gasto)}${x.k.tel?' · '+esc(x.k.tel):''}</div>
-    ${x.ret&&!x.futura&&x.k.tel?`<a class="btn sm" style="margin-top:8px" href="${wa(x.k.tel,msg)}" target="_blank" rel="noopener">Avisar retoque por WhatsApp</a>`:''}<div style="text-align:right"><button class="ghost sm" style="margin-top:6px" onclick="borrarCli('${x.k.id}')">Eliminar</button></div></div>`}).join('')||`<div class="card empty">${q?'Sin resultados para "'+esc(qCli)+'".':'Aún no tienes clientas.'}</div>`}
+    ${x.ret&&!x.futura&&x.k.tel?`<a class="btn sm" style="margin-top:8px" href="${wa(x.k.tel,msg)}" target="_blank" rel="noopener">Avisar retoque por WhatsApp</a>`:''}<div class="row" style="justify-content:flex-end;gap:6px;margin-top:6px"><button class="sm" onclick="abrirFichaCli('${x.k.id}')">Ver ficha</button><button class="ghost sm" onclick="borrarCli('${x.k.id}')">Eliminar</button></div></div>`}).join('')||`<div class="card empty">${q?'Sin resultados para "'+esc(qCli)+'".':'Aún no tienes clientas.'}</div>`}
 
 
 // ---------- Servicios ----------
@@ -1077,7 +1088,7 @@ function tourSig(){if(tourI<TOUR.length-1){tourI++;pintarTour()}else cerrarTour(
 function cerrarTour(){const el=document.getElementById('tour');if(el)el.remove();L.tour=1;saveL()}
 
 // ---------- Menú lateral ----------
-const DIC={"pub": "<path d=\"M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z\"/><path d=\"M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13\"/>", "svc": "<path d=\"M10 2h4v5h-4z\"/><rect x=\"6.5\" y=\"7\" width=\"11\" height=\"14.5\" rx=\"3.5\"/><path d=\"M9.5 11.5c1 .8 4 .8 5 0\"/>", "aj": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1\"/>", "plan": "<path d=\"M12 2 9.5 8.5 3 9l5 4.5L6.5 20 12 16.5 17.5 20 16 13.5 21 9l-6.5-.5z\"/>", "cont": "<rect x=\"5\" y=\"2.5\" width=\"14\" height=\"19\" rx=\"3\"/><path d=\"M8.5 6.5h7v3h-7z\"/><path d=\"M8.5 13h.01M12 13h.01M15.5 13h.01M8.5 17h.01M12 17h.01M15.5 17h.01\"/>", "resp": "<path d=\"M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 7a4.5 4.5 0 0 1-.5 11z\"/><path d=\"M12 11v6M9.5 13.5 12 11l2.5 2.5\"/>", "guia": "<circle cx=\"12\" cy=\"12\" r=\"9.5\"/><path d=\"m15.5 8.5-2 5-5 2 2-5z\"/>", "priv": "<path d=\"M12 2.5 4.5 5.5v6c0 4.6 3.2 8.6 7.5 10 4.3-1.4 7.5-5.4 7.5-10v-6z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/>"},DIG={"pub": "#fff0e0,#ffdcc0,#e0702a", "svc": "#ffe3ef,#ffcfe3,#d6488a", "aj": "#ece8ff,#ddd5ff,#7a62d6", "plan": "#fff1d9,#ffe2b8,#e0892a", "cont": "#ddf7ea,#c6efdb,#249a68", "resp": "#e0f2fd,#cbe7fb,#2f86c9", "guia": "#ffe6ea,#ffd3da,#de5b78", "priv": "#e6e9ff,#d4d9ff,#5864d4"};
+const DIC={"rec": "<path d=\"M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z\"/>", "pub": "<path d=\"M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z\"/><path d=\"M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13\"/>", "svc": "<path d=\"M10 2h4v5h-4z\"/><rect x=\"6.5\" y=\"7\" width=\"11\" height=\"14.5\" rx=\"3.5\"/><path d=\"M9.5 11.5c1 .8 4 .8 5 0\"/>", "aj": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1\"/>", "plan": "<path d=\"M12 2 9.5 8.5 3 9l5 4.5L6.5 20 12 16.5 17.5 20 16 13.5 21 9l-6.5-.5z\"/>", "cont": "<rect x=\"5\" y=\"2.5\" width=\"14\" height=\"19\" rx=\"3\"/><path d=\"M8.5 6.5h7v3h-7z\"/><path d=\"M8.5 13h.01M12 13h.01M15.5 13h.01M8.5 17h.01M12 17h.01M15.5 17h.01\"/>", "resp": "<path d=\"M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 7a4.5 4.5 0 0 1-.5 11z\"/><path d=\"M12 11v6M9.5 13.5 12 11l2.5 2.5\"/>", "guia": "<circle cx=\"12\" cy=\"12\" r=\"9.5\"/><path d=\"m15.5 8.5-2 5-5 2 2-5z\"/>", "priv": "<path d=\"M12 2.5 4.5 5.5v6c0 4.6 3.2 8.6 7.5 10 4.3-1.4 7.5-5.4 7.5-10v-6z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/>"},DIG={"rec": "#ffe3ec,#ffd0de,#d94c7c", "pub": "#fff0e0,#ffdcc0,#e0702a", "svc": "#ffe3ef,#ffcfe3,#d6488a", "aj": "#ece8ff,#ddd5ff,#7a62d6", "plan": "#fff1d9,#ffe2b8,#e0892a", "cont": "#ddf7ea,#c6efdb,#249a68", "resp": "#e0f2fd,#cbe7fb,#2f86c9", "guia": "#ffe6ea,#ffd3da,#de5b78", "priv": "#e6e9ff,#d4d9ff,#5864d4"};
 const dic=k=>{const[g1,g2,c]=DIG[k].split(',');return`<i style="--g1:${g1};--g2:${g2};--ic:${c}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${DIC[k]}</svg></i>`};
 function abrirMenu(){const N=st.negocio,p=plan(),ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&!/Android/.test(navigator.userAgent),cu=ios?EXTRAS.contadorWeb:EXTRAS.contador;
   const it=(ic,t,sub,act,on)=>`<button class="dit ${on?'on':''}" onclick="${act}">${dic(ic)}<span>${t}${sub?`<small>${sub}</small>`:''}</span><span class="ar">›</span></button>`;
@@ -1092,10 +1103,59 @@ function abrirMenu(){const N=st.negocio,p=plan(),ios=/iPhone|iPad|iPod|Macintosh
   ${it('resp','Respaldo','Guarda o recupera tus datos',"irA('ajustes','aj-resp')")}
   <div class="dsec">Ayuda</div>
   ${it('guia','Guía de uso','Cómo funciona Mimo',"cerrarMenu();abrirTour()")}
+  ${it('rec','Recomienda Mimo','Compártela con una colega',"cerrarMenu();recomendarMimo()")}
   <a class="dit" href="privacidad.html" target="_blank" rel="noopener">${dic('priv')}<span>Privacidad y seguridad</span><span class="ar">›</span></a>
   <p class="muted" style="text-align:center;font-size:12px;margin-top:18px">Mimo · versión ${VERSION_APP.replace('mimo-','')}</p>`;
   document.getElementById('drw').classList.add('open')}
 function cerrarMenu(){document.getElementById('drw').classList.remove('open')}
+
+// ---------- Ficha de clienta ----------
+const MESES_C=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function confirmo(id){const c=st.citas.find(x=>x.id===id);if(!c)return;c.conf=true;save();render();toast('Marcada como confirmada')}
+function diasACumple(cu){if(!/^\d{2}-\d{2}$/.test(cu||''))return null;const[d,m]=cu.split('-').map(Number),t=new Date(ymd(hoy())+'T12:00');let c=new Date(t.getFullYear(),m-1,d,12);if(c<t)c=new Date(t.getFullYear()+1,m-1,d,12);return Math.round((c-t)/864e5)}
+function cuTxt(cu){const[d,m]=cu.split('-').map(Number);return d+' '+MESES_C[m-1]}
+function msgCumple(n){return`¡Feliz cumpleaños, ${n.split(' ')[0]}! 🎂🎉 Te saluda ${st.negocio.nombre||'tu salón'}. Ven a consentirte en tu mes, ¡te tenemos un regalito! 🎁\nReserva aquí: ${enlaceReserva()}`}
+function msgVuelve(n){return`¡Hola ${n.split(' ')[0]}! Te extrañamos en ${st.negocio.nombre||'el salón'} 💖 ¿Agendamos tu próxima hora?\nReserva aquí: ${enlaceReserva()}`}
+function datosCli(id){const k=cli(id)||{},t=ymd(hoy()),cs=st.citas.filter(c=>c.clientaId===id&&c.estado!=='cancelada').sort((a,b)=>(a.fecha+hm(a.inicio)).localeCompare(b.fecha+hm(b.inicio)));
+  const at=cs.filter(c=>c.estado==='hecha'),gasto=at.reduce((a,c)=>a+(+c.precio||0),0),fav={};at.forEach(c=>{const n=(svc(c.servicioId)||{}).nombre||c.etiqueta||'';if(n)fav[n]=(fav[n]||0)+1});
+  const ult=at.length?at[at.length-1].fecha:null,prox=cs.find(c=>c.fecha>=t&&c.estado==='agendada');
+  return{k,cs,at:at.length,gasto,fav:Object.entries(fav).sort((a,b)=>b[1]-a[1])[0],primera:cs[0]&&cs[0].fecha,ult,prox,novino:cs.filter(c=>c.estado==='novino').length,sinVenir:ult?Math.round((new Date(t+'T12:00')-new Date(ult+'T12:00'))/864e5):null,dc:diasACumple(k.cu)}}
+function fCorta(f){return new Date(f+'T12:00').toLocaleDateString('es-CL',{day:'numeric',month:'short',year:f.slice(0,4)===String(new Date().getFullYear())?undefined:'2-digit'}).replace('.','')}
+function abrirFichaCli(id){const D=datosCli(id),k=D.k;if(!k.id)return;const F=fid(),ideas=[];
+  if(D.dc===0)ideas.push(['🎂','¡Hoy está de cumpleaños!','Mándale un saludo con un regalito.','cumple']);
+  else if(D.dc!=null&&D.dc<=7)ideas.push(['🎂','Cumple en '+D.dc+' día'+(D.dc===1?'':'s'),'Buen momento para invitarla a consentirse.','cumple']);
+  if(F.on&&D.at){const r=D.at%F.n;if(r===0)ideas.push(['🎁','Le toca '+F.premio,'Completó sus '+F.n+' sellos.']);else if(D.at>=2&&F.n-r<=2)ideas.push(['🎁','Le falta'+(F.n-r===1?'':'n')+' '+(F.n-r)+' para '+F.premio,'Cuéntaselo: es un motivo para volver.'])}
+  if(D.at>=5)ideas.push(['⭐','Clienta fiel ('+D.at+' visitas)','Ofrécele un extra: diseño, hidratación o retiro.']);
+  if(D.sinVenir!=null&&D.sinVenir>=35&&!D.prox)ideas.push(['⏳','Hace '+D.sinVenir+' días que no viene','Escríbele para que agende de nuevo.','vuelve']);
+  if(D.novino>=2)ideas.push(['⚠️','Faltó '+D.novino+' veces','Pídele confirmar el día antes.']);
+  const opD='<option value="">Día</option>'+Array.from({length:31},(_,i)=>`<option ${k.cu&&+k.cu.slice(0,2)===i+1?'selected':''}>${String(i+1).padStart(2,'0')}</option>`).join('');
+  const opM='<option value="">Mes</option>'+MESES_C.map((m,i)=>`<option value="${String(i+1).padStart(2,'0')}" ${k.cu&&+k.cu.slice(3)===i+1?'selected':''}>${m}</option>`).join('');
+  const hist=D.cs.slice().reverse().slice(0,12).map(c=>`<div class="fh"><span>${fCorta(c.fecha)}</span><b>${esc((svc(c.servicioId)||{}).nombre||c.etiqueta||'')}</b><em class="tag ${c.estado==='hecha'?'ok':c.estado==='novino'?'warn':''}">${c.estado==='hecha'?'Atendida':c.estado==='novino'?'No vino':c.fecha>=ymd(hoy())?'Agendada':'Pendiente'}</em></div>`).join('');
+  document.getElementById('sheetIn').innerHTML=`<div class="fi-top"><div class="fi-av">${esc((k.nombre||'?').trim().charAt(0).toUpperCase())}</div><div style="min-width:0"><h3 style="margin:0">${esc(k.nombre)}</h3><small class="muted">${esc(k.tel||'Sin teléfono')}${k.cu?' · 🎂 '+cuTxt(k.cu):''}</small></div><button class="ghost sm" style="margin-left:auto" onclick="closeSheet()">✕</button></div>
+   <div class="fi-stats"><div><b>${D.at}</b><span>visitas</span></div><div><b>${clp(D.gasto)}</b><span>gastado</span></div><div><b>${D.at?clp(Math.round(D.gasto/D.at)):'—'}</b><span>promedio</span></div></div>
+   ${sellosHTML(D.at)}
+   <div class="fi-datos">${D.primera?`<div><span>Clienta desde</span><b>${fCorta(D.primera)}</b></div>`:''}${D.ult?`<div><span>Última visita</span><b>${fCorta(D.ult)}${D.sinVenir!=null?' · hace '+D.sinVenir+' d':''}</b></div>`:''}${D.fav?`<div><span>Pide siempre</span><b>${esc(D.fav[0])}</b></div>`:''}${D.prox?`<div><span>Próxima hora</span><b>${fCorta(D.prox.fecha)} ${hm(D.prox.inicio)}</b></div>`:''}</div>
+   ${ideas.length?`<div class="fi-ideas">${ideas.map(i=>`<div><span>${i[0]}</span><p><b>${i[1]}</b><small>${i[2]}</small></p>${i[3]&&k.tel?`<a class="btn sm" href="${wa(k.tel,i[3]==='cumple'?msgCumple(k.nombre):msgVuelve(k.nombre))}" target="_blank" rel="noopener">${sic('wa')}</a>`:''}</div>`).join('')}</div>`:''}
+   <label>🎂 Cumpleaños</label><div class="row"><select id="fiD" style="flex:1">${opD}</select><select id="fiM" style="flex:1">${opM}</select></div>
+   <label>📝 Notas de la clienta</label><textarea id="fiN" rows="3" maxlength="300" placeholder="Ej: le gustan los tonos nude, alérgica al gel, uñas cortas">${esc(k.notas||'')}</textarea>
+   <button style="width:100%;margin-top:10px" onclick="guardarFichaCli('${k.id}')">Guardar ficha</button>
+   ${hist?`<h4 style="margin:16px 0 6px">Historial</h4><div class="fi-hist">${hist}</div>`:''}
+   <div class="row" style="margin-top:14px;gap:8px">${k.tel?`<a class="btn ghostb" style="flex:1;text-align:center" href="${wa(k.tel,'Hola '+k.nombre.split(' ')[0]+', ')}" target="_blank" rel="noopener">WhatsApp</a>`:''}<button style="flex:1" onclick="closeSheet();nuevaCita();f.clientaId='${k.id}';f.nueva=false;drawForm()">Agendar</button></div>`;
+  openSheet()}
+function guardarFichaCli(id){const k=cli(id);if(!k)return;const d=document.getElementById('fiD').value,m=document.getElementById('fiM').value,n=document.getElementById('fiN').value.trim().slice(0,300);
+  if((d&&!m)||(!d&&m))return toast('Elige día y mes del cumpleaños');k.cu=d&&m?d+'-'+m:'';k.notas=n;save();toast('Ficha guardada');abrirFichaCli(id);if(tab==='clientas')render()}
+function cumpleHTML(){const hoyC=st.clientas.filter(k=>diasACumple(k.cu)===0);if(!hoyC.length||dia!==ymd(hoy()))return'';
+  return`<div class="card pubban" style="cursor:default"><i style="--c:#de5b78">🎂</i><div style="flex:1;min-width:0"><b>Hoy ${hoyC.length>1?'están':'está'} de cumpleaños</b><div class="muted">${hoyC.map(k=>esc(k.nombre.split(' ')[0])).join(', ')}</div></div>${hoyC.slice(0,1).map(k=>k.tel?`<a class="btn sm" href="${wa(k.tel,msgCumple(k.nombre))}" target="_blank" rel="noopener">Saludar</a>`:`<button class="ghost sm" onclick="abrirFichaCli('${k.id}')">Ver</button>`).join('')}</div>`}
+
+// ---------- Fotos del catálogo en tu página de reservas ----------
+function firmaCat(){return fotosCat().slice(-12).map(d=>d.id+'|'+d.nombre+'|'+d.servicioId).join(';')}
+function achicarURL(src){return new Promise((ok,mal)=>{const im=new Image();im.onload=()=>{const l0=Math.min(im.width,im.height),sx=(im.width-l0)/2,sy=(im.height-l0)/2;
+  for(const[l,q]of[[480,.72],[420,.66],[360,.6],[300,.55]]){const cv=document.createElement('canvas');cv.width=cv.height=l;const x=cv.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(im,sx,sy,l0,l0,0,0,l,l);
+    let d=cv.toDataURL('image/webp',q);if(!d.startsWith('data:image/webp'))d=cv.toDataURL('image/jpeg',q);if(d.length<58000)return ok(d)}mal('grande')};im.onerror=mal;im.src=src})}
+let enviandoCat=false;
+async function enviarCatalogo(forzar){if(enviandoCat||!st.negocio.registrado||!L.id||!navigator.onLine)return;const fi=firmaCat();if(!forzar&&L.catFirma===fi)return;enviandoCat=true;
+  try{const fotos=[];for(const d of fotosCat().slice(-12)){try{fotos.push({n:d.nombre,s:(svc(d.servicioId)||{}).nombre||'',i:await achicarURL(imgDe(d))})}catch(e){}}
+    const r=await fetch(API,{method:'POST',body:JSON.stringify({accion:'catalogo',id:L.id,fotos:JSON.stringify(fotos)})});const j=await r.json();if(j&&j.ok){L.catFirma=fi;saveL()}}catch(e){}enviandoCat=false}
 
 // ---------- Horas libres para compartir ----------
 let hlSel=0;
@@ -1167,8 +1227,13 @@ const PUB_TIPOS={
  diseno:{t:'Diseño del catálogo',d:'Una foto de tu trabajo para antojar',ic:'📸',c:'#2f86c9'},
  oferta:{t:'Oferta',d:'Tu promoción del momento',ic:'🏷️',c:'#e0892a'},
  qr:{t:'Reserva aquí',d:'Tu QR y link para reservar',ic:'✨',c:'#249a68'}};
-function pubCfg(){const p=st.negocio.pub||{};return{on:p.on!==false,horas:p.horas||['10:00'],oferta:p.oferta||{t:'',d:''},hecho:p.hecho||{},pro:!!p.pro}}
-function setPub(k,v){st.negocio.pub=Object.assign({},pubCfg(),st.negocio.pub||{});st.negocio.pub[k]=v;save();render()}
+function pubCfg(){const p=st.negocio.pub||{};return{on:p.on!==false,horas:p.horas||['10:00'],dias:p.dias||[1,2,3,4,5,6,0],oferta:p.oferta||{t:'',d:''},hecho:p.hecho||{},pro:!!p.pro}}
+function pubHoyDia(){return pubCfg().dias.includes(new Date().getDay())}
+function rachaPub(){const r=L.pubRacha;return r&&r.u&&r.u>=addDays(ymd(hoy()),-2)?r.n:0}
+function guardarPubSW(){try{if(!('caches' in window))return;const P=pubCfg(),h=ymd(hoy());caches.open('mimo-pub').then(c=>c.put('./__pub',new Response(JSON.stringify({on:P.on&&!!st.negocio.registrado,h:P.horas,d:P.dias,hecha:(P.hecho[h]||[]).length>=pubHoy().length?h:'',avisada:L.pubAvisada||''}),{headers:{'content-type':'application/json'}})))}catch(e){}}
+function registrarSyncPub(){try{navigator.serviceWorker&&navigator.serviceWorker.ready.then(r=>{if(r.periodicSync)r.periodicSync.register('mimo-pub',{minInterval:36e5}).catch(()=>{})})}catch(e){}}
+function setPub(k,v){st.negocio.pub=Object.assign({},pubCfg(),st.negocio.pub||{});st.negocio.pub[k]=v;save();render();guardarPubSW();if(k==='on'&&v)registrarSyncPub()}
+function togPubDia(d){const a=pubCfg().dias.slice(),i=a.indexOf(d);if(i>=0){if(a.length===1)return toast('Deja al menos un día');a.splice(i,1)}else a.push(d);setPub('dias',a)}
 function nDia(){const d=hoy();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)}
 function fotosCat(){return st.catalogo.filter(d=>imgDe(d))}
 function svcsAct(){return st.servicios.filter(s=>s.activo&&st.negocio.rubros.includes(s.rubro))}
@@ -1180,7 +1245,9 @@ function pubHoy(){const P=pubCfg(),n=nDia(),out=[];
   if(rot.length){out.push(rot[n%rot.length]);if(rot.length>1)out.push(rot[(n+1)%rot.length])}
   if(out.length<3)out.push(['qr']);return out.slice(0,3)}
 function pubHecho(k){return((pubCfg().hecho[ymd(hoy())])||[]).includes(k)}
-function marcarPub(k){const P=pubCfg(),h=ymd(hoy()),hc={};hc[h]=[...new Set([...(P.hecho[h]||[]),k])];setPub('hecho',hc)}
+function marcarPub(k){const P=pubCfg(),h=ymd(hoy()),hc={};hc[h]=[...new Set([...(P.hecho[h]||[]),k])];
+  const rc=L.pubRacha||{};if(rc.u!==h){L.pubRacha={u:h,n:rc.u&&rc.u>=addDays(h,-2)?(rc.n||0)+1:1};saveL()}
+  setPub('hecho',hc);guardarPubSW()}
 function pubDesc(it){const[k,x]=it;if(k==='horas')return nomDia(x)+': '+horasLibres(x).slice(0,5).map(hm).join(' · ')+(horasLibres(x).length>5?'…':'');
   if(k==='servicio'){const s=svc(x);return s?esc(s.nombre)+' · desde '+clp(s.precio):''}
   if(k==='diseno'){const d=st.catalogo.find(z=>z.id===x);return d?esc(d.nombre):''}
@@ -1188,10 +1255,11 @@ function pubDesc(it){const[k,x]=it;if(k==='horas')return nomDia(x)+': '+horasLib
 function vPublicar(){
   const P=pubCfg(),hoyL=pubHoy(),listas=hoyL.filter(i=>pubHecho(i[0])).length;
   const card=(it,i)=>{const T=PUB_TIPOS[it[0]],ok=pubHecho(it[0]);return`<div class="pubc ${ok?'ok':''}"><i style="--c:${T.c}">${T.ic}</i><div style="flex:1;min-width:0"><b>${T.t}</b><div class="muted">${pubDesc(it)}</div></div>
-    <button class="${ok?'ghost ':''}sm" onclick="publicar(${i})">${ok?'✓ Lista':'Crear'}</button></div>`};
+    <div style="display:flex;flex-direction:column;gap:4px"><button class="${ok?'ghost ':''}sm" onclick="publicar(${i})">${ok?'✓ Lista':'Crear'}</button><button class="ghost sm" style="font-size:11.5px;padding:4px 8px" onclick="copiarTextoPub(${i})">Texto</button></div></div>`};
   window._pubL=hoyL;
   V(`<h2 class="sectiontitle">Plan de publicaciones</h2><p class="muted" style="margin-top:-4px">Cada día te dejamos historias listas con tus horas, servicios, diseños y ofertas. Tocas <b>Crear</b>, eliges Instagram o WhatsApp y listo.</p>
-  <div class="card hello"><div class="row between"><b style="font-size:17px">📣 Hoy toca publicar</b><span class="tag">${listas} de ${hoyL.length}</span></div>
+  <div class="card hello"><div class="row between"><b style="font-size:17px">📣 ${pubHoyDia()?'Hoy toca publicar':'Hoy es tu día libre'}</b><span class="tag">${listas} de ${hoyL.length}</span></div>
+   ${rachaPub()?`<div class="racha">🔥 <b>${rachaPub()} día${rachaPub()>1?'s':''}</b> publicando seguido. ¡No cortes la racha!</div>`:`<div class="racha">🔥 Publica hoy y empieza tu racha.</div>`}
    <div class="pubbar"><i style="width:${Math.round(listas/Math.max(1,hoyL.length)*100)}%"></i></div>
    ${hoyL.map(card).join('')}</div>
   <div class="sec">Más ideas para hoy</div>
@@ -1203,16 +1271,18 @@ function vPublicar(){
   <div class="sec">Recordatorio</div>
   <div class="card"><div class="row between"><b>Recordarme publicar</b><button class="chip ${P.on?'on':''}" onclick="setPub('on',${!P.on})">${P.on?'Activado':'Apagado'}</button></div>
    ${P.on?`<label>¿A qué hora?</label><div class="chips">${['09:00','11:00','13:00','18:00','20:00'].map(h=>`<button class="chip ${P.horas.includes(h)?'on':''}" onclick="togPubHora('${h}')">${h}</button>`).join('')}</div>
-   <p class="muted" style="margin:6px 0 0">A esa hora te aparece el aviso en Mimo${('Notification' in window)&&Notification.permission==='granted'?' y una notificación si tienes la app abierta o en segundo plano':''}.</p>`:''}</div>
+   <label>¿Qué días publicas?</label><div class="dias7">${[1,2,3,4,5,6,0].map(d=>`<button class="${P.dias.includes(d)?'on':''}" onclick="togPubDia(${d})">${DIAS[d]}</button>`).join('')}</div>
+   <p class="muted" style="margin:6px 0 0">A esa hora te aparece el aviso en Mimo${('Notification' in window)&&Notification.permission==='granted'?' y una notificación en tu celular':''}.</p>${('Notification' in window)&&Notification.permission!=='granted'?`<button class="ghost sm" style="margin-top:8px" onclick="pedirNotif()">Activar notificaciones</button>`:''}`:''}</div>
   <div class="card pro"><div class="row between" style="align-items:flex-start"><div><span class="tag" style="background:linear-gradient(135deg,#ffd76a,#f0a03a);color:#5a3a00">PRO · Muy pronto</span><h3 style="margin:8px 0 4px">🤖 Publicación automática</h3></div></div>
    <p class="muted" style="margin:0 0 10px">Mimo publicará sola tus historias en tu Instagram de empresa, a las horas que elijas, sin que tengas que tocar nada.</p>
    ${P.pro?'<p style="margin:0;font-weight:700;color:var(--plum)">✓ Te avisaremos apenas esté lista.</p>':`<button style="width:100%" onclick="setPub('pro',true);toast('¡Listo! Te avisaremos cuando esté disponible')">Quiero que me avisen</button>`}</div>`)}
 function togPubHora(h){const a=pubCfg().horas.slice();const i=a.indexOf(h);if(i>=0){if(a.length===1)return toast('Deja al menos una hora');a.splice(i,1)}else a.push(h);setPub('horas',a.sort())}
-function publicar(i){const it=(window._pubL||pubHoy())[i];if(it)crearPub(it)}
+function publicar(i){const it=(window._pubL||pubHoy())[i];if(it)crearPubTip(it)}
 function publicarTipo(k){const n=nDia();let x;if(k==='horas')x=diaHorasPub();if(k==='servicio'){const a=svcsAct();if(!a.length)return toast('Agrega servicios primero');x=a[(n+Math.floor(Math.random()*a.length))%a.length].id}
   if(k==='diseno'){const a=fotosCat();if(!a.length){toast('Sube fotos al catálogo primero');return go('catalogo')}x=a[Math.floor(Math.random()*a.length)].id}
   if(k==='oferta'&&!pubCfg().oferta.t.trim()){toast('Escribe tu oferta abajo');setTimeout(()=>{const e=document.querySelector('input[maxlength="40"]');e&&e.focus()},300);return}
-  crearPub([k,x])}
+  crearPubTip([k,x])}
+function crearPubTip(it){consejoLink(()=>crearPub(it))}
 async function crearPub(it){const[k,x]=it;
   if(k==='qr'){marcarPub('qr');return instaHistoria()}
   if(k==='horas'){const ds=diasAbiertos(4);const i=ds.indexOf(x);hlSel=i<0?0:i}
@@ -1223,6 +1293,24 @@ async function crearPub(it){const[k,x]=it;
   const f=new File([blob],'mimo-'+k+'.png',{type:'image/png'}),tx='✨ Reserva tu hora en '+(st.negocio.nombre||'mi salón')+' 👉 '+enlaceReserva();
   if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});toast('Tip: en la historia agrega el sticker "Enlace" y pega');return}catch(e){if(e&&e.name==='AbortError')return}}
   descargarBlob(blob,'mimo-'+k+'.png');toast('Imagen guardada: súbela a tu historia')}
+function textoPub(it){const[k,x]=it,n=st.negocio.nombre||'mi salón',LK='\n👉 Reserva aquí: '+enlaceReserva();
+  if(k==='horas'){const hs=horasLibres(x);return`✨ Horas disponibles en ${n}\n📅 ${nomDia(x)}: ${hs.slice(0,10).map(hm).join(' · ')}${hs.length>10?' y más':''}`+LK}
+  if(k==='servicio'){const s=svc(x)||{};return`💅 ${s.nombre} · desde ${clp(s.precio||0)}\nEn ${n} te dejamos preciosa.`+LK}
+  if(k==='diseno'){const d=st.catalogo.find(z=>z.id===x)||{};return`📸 ${d.nombre||'Nuevo trabajo'} en ${n}\n¿Lo quieres? Pide "${d.nombre||''}" al reservar.`+LK}
+  if(k==='oferta'){const o=pubCfg().oferta;return`🔥 ${o.t}${o.d?' · '+o.d:''}\nEn ${n}. ¡Agenda antes de que se acaben los cupos!`+LK}
+  return`📲 Reserva tu hora en ${n} en 1 minuto, sin esperar respuesta.`+LK}
+async function copiarTextoPub(i){const it=(window._pubL||pubHoy())[i];if(!it)return;try{await navigator.clipboard.writeText(textoPub(it));toast('Texto copiado: pégalo en tu publicación o estado')}catch(e){toast('No se pudo copiar')}}
+function consejoLink(sig){if((L.tipIG||0)>=3)return sig();L.tipIG=(L.tipIG||0)+1;saveL();window._tipSig=sig;
+  document.getElementById('sheetIn').innerHTML=`<h3 style="margin-top:0">🔗 Para que tu enlace se pueda tocar</h3><p class="muted" style="margin:0 0 10px">Instagram no deja que otra app ponga el enlace sola. Te lo dejamos <b>copiado</b>; en la historia haz esto:</p>
+   <ol class="igpasos"><li>Toca el ícono de <b>stickers</b> 🙂 arriba.</li><li>Elige <b>🔗 Enlace</b> y mantén presionado para <b>Pegar</b>.</li><li>Toca <b>Personalizar texto</b> y escribe <b>Reserva tu hora</b>. Ponlo sobre el QR.</li></ol>
+   <div class="iglink">${esc(enlaceReserva().replace(/^https?:\/\//,''))}</div>
+   <button style="width:100%;margin-top:12px" onclick="closeSheet();window._tipSig&&window._tipSig()">Entendido, crear historia</button>`;openSheet()}
+function recomendarMimo(){const url=EXTRAS.apk||'https://mimo-cl.github.io/';
+  const tx=os=>`💅 Te recomiendo *Mimo*, la agenda de belleza: tus clientas reservan solas con tu enlace, recordatorios por WhatsApp, catálogo con fotos y caja del día.\n\n✅ 30 días gratis, con tu propia cuenta.\n\n`+(os==='ios'?`📲 En iPhone:\n1. Abre ${url} en *Safari*.\n2. Toca *Compartir* ⬆️.\n3. Elige *"Agregar a inicio"*. ¡Lista!`:EXTRAS.apk?`📲 Descárgala aquí: ${url}`:`📲 En Android:\n1. Abre ${url} en *Chrome*.\n2. Toca *"Instalar app"* (o ⋮ → Instalar app).\n3. ¡Lista!`);
+  window._recTx=tx;
+  document.getElementById('sheetIn').innerHTML=`<h3 style="margin-top:0">💖 Recomienda Mimo</h3><p class="muted">Compártela con una colega. Su Mimo es nueva y solo suya, con sus propios 30 días gratis. Nada tuyo se comparte.</p>
+   <label>¿Qué celular tiene?</label><div class="row" style="gap:8px"><a class="btn" style="flex:1;text-align:center" href="https://wa.me/?text=${encodeURIComponent(tx('android'))}" target="_blank" rel="noopener">Android</a><a class="btn" style="flex:1;text-align:center" href="https://wa.me/?text=${encodeURIComponent(tx('ios'))}" target="_blank" rel="noopener">iPhone</a></div>
+   <button class="ghost" style="width:100%;margin-top:10px" onclick="navigator.clipboard.writeText(window._recTx('android')).then(()=>toast('Mensaje copiado'))">Copiar mensaje</button>`;openSheet()}
 function envolver(c,t,maxW){const ws=String(t).split(' '),ls=[];let l='';for(const w of ws){const p=l?l+' '+w:w;if(c.measureText(p).width>maxW&&l){ls.push(l);l=w}else l=p}if(l)ls.push(l);return ls}
 async function imagenPub(k,x){
   const W=1080,H=1920,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
@@ -1254,10 +1342,10 @@ async function imagenPub(k,x){
   y=qy+qs+56+70;c.fillStyle='#a14d78';c.font=`800 44px ${san}`;c.fillText('👆 Reserva tu hora aquí',W/2,y);y+=50;
   c.fillStyle='#8a7a8f';c.font=`600 30px ${san}`;c.fillText(LK.replace(/^https?:\/\//,''),W/2,y);
   return await new Promise(ok=>cv.toBlob(ok,'image/png'))}
-function pubPendiente(){const P=pubCfg();if(!P.on||!st.negocio.registrado)return null;const ahora=hm(new Date().getHours()*60+new Date().getMinutes());if(!P.horas.some(h=>ahora>=h))return null;const L0=pubHoy(),f=L0.filter(i=>!pubHecho(i[0])).length;return f?f:null}
+function pubPendiente(){const P=pubCfg();if(!P.on||!st.negocio.registrado||!pubHoyDia())return null;const ahora=hm(new Date().getHours()*60+new Date().getMinutes());if(!P.horas.some(h=>ahora>=h))return null;const L0=pubHoy(),f=L0.filter(i=>!pubHecho(i[0])).length;return f?f:null}
 function bannerPub(){const f=pubPendiente();return f&&dia===ymd(hoy())?`<div class="card pubban" onclick="go('publicar')"><i>📣</i><div style="flex:1"><b>Hoy toca publicar</b><div class="muted">${f} ${f>1?'historias listas':'historia lista'} para tus redes</div></div><span style="color:var(--plum);font-size:22px">›</span></div>`:''}
 let pubAvisado='';
-function revisarPub(){const P=pubCfg();if(!P.on)return;const ahora=hm(new Date().getHours()*60+new Date().getMinutes()),h=P.horas.find(x=>x===ahora);if(!h)return;const key=ymd(hoy())+h;if(pubAvisado===key||!pubPendiente())return;pubAvisado=key;
+function revisarPub(){const P=pubCfg();if(!P.on)return;const ahora=hm(new Date().getHours()*60+new Date().getMinutes()),h=P.horas.find(x=>x===ahora);if(!h)return;const key=ymd(hoy())+h;if(pubAvisado===key||!pubPendiente())return;pubAvisado=key;L.pubAvisada=ymd(hoy());saveL();guardarPubSW();
   try{if(Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('📣 Hoy toca publicar',{body:'Tus historias del día están listas en Mimo',icon:'icon-192.png',badge:'icon-192.png',tag:'mimo-pub'}))}catch(e){}
   if(tab==='agenda')render()}
 setInterval(revisarPub,30000);
@@ -1362,6 +1450,8 @@ window.androidBack=function(){const sh=document.getElementById('sheet');if(sh.cl
  if(tab!=='agenda'&&!st.negocio.bienvenida){go('agenda');return 'ok'}return 'exit'};
 render();
 revisarHash();
+if(location.hash==='#publicar'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}if(st.negocio.registrado&&!st.negocio.bienvenida)go('publicar')}
+guardarPubSW();if(pubCfg().on)registrarSyncPub();
 verificar();
 if(st.negocio.registrado&&!st.negocio.bienvenida&&!L.tour)setTimeout(abrirTour,600);
 revisarRetornoPago();

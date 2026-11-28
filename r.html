@@ -158,6 +158,17 @@ nav button.on{color:var(--onp);background:linear-gradient(135deg,var(--plum),col
 .tag{background:color-mix(in srgb,var(--plum2) 35%,var(--soft))}
 .dis{border-color:color-mix(in srgb,var(--plum2) 45%,var(--line))}
 .sbtn{border-color:color-mix(in srgb,var(--plum2) 55%,var(--line));background:linear-gradient(160deg,var(--card),color-mix(in srgb,var(--soft) 80%,var(--card)))}
+.gal{display:flex;gap:10px;overflow-x:auto;padding:2px 14px 6px 0;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.gal button{flex:none;width:118px;padding:0;border:0;background:none!important;box-shadow:none!important;scroll-snap-align:start;text-align:left;color:var(--ink)!important}
+.gal img{width:118px;height:118px;object-fit:cover;border-radius:18px;display:block;box-shadow:0 8px 16px -8px var(--plum);border:2px solid #fff}
+.gal span{display:block;font-size:12.5px;font-weight:700;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.dcard{padding:6px 6px 10px!important;border-radius:18px!important;text-align:left;color:var(--ink)!important;background:var(--card)!important;border:2px solid var(--line)!important;box-shadow:0 6px 14px -10px var(--plum)!important;display:flex;flex-direction:column;gap:3px}
+.dcard img,.dcard .ph{width:100%;aspect-ratio:1;object-fit:cover;border-radius:13px;display:grid;place-items:center;background:var(--soft);font-size:28px}
+.dcard b{font-size:13.5px;padding:0 4px;margin-top:4px}.dcard span{font-size:12px;color:var(--muted);padding:0 4px}
+.dcard.on{border-color:var(--plum)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--plum2) 60%,transparent),0 10px 18px -10px var(--plum)!important}
+.lb{position:fixed;inset:0;z-index:50;background:rgba(30,15,30,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center}
+.lb img{max-width:100%;max-height:72vh;border-radius:20px}.lb b{margin-top:12px;font-size:17px}.lb small{opacity:.8}
 </style>
 </head>
 <body>
@@ -200,6 +211,7 @@ async function cargar(){
   try{const j=await api({accion:'publico',b:codigo});
     if(!j.ok){pantalla('No encontramos este salón','Revisa el enlace o pídele uno nuevo.');return}
     P=j.perfil||{};MAXD=+P.dd||90;ocupado=j.ocupado||[];ahora=j.ahora;cargado=Date.now();
+    api({accion:'catalogo',b:codigo}).then(c=>{if(c&&c.ok&&Array.isArray(c.fotos)){FOTOS=c.fotos.filter(f=>/^data:image\/(webp|jpeg|png);base64,/.test(f.i||''));if(FOTOS.length)render()}}).catch(()=>{});
     tema();document.title='Reserva en '+(P.n||'tu salón');
     if(!j.activo){pantalla('Reservas en pausa','Por ahora no se puede reservar en línea. Escríbele directo al salón.',true);return}
     render();
@@ -207,6 +219,10 @@ async function cargar(){
 }
 function tema(){const t=TEMAS[P.tema]||TEMAS.algodon;Object.entries(t.v).forEach(([k,v])=>document.documentElement.style.setProperty('--'+k,v));document.querySelector('meta[name=theme-color]').content=t.v.bg;return t}
 const X=()=>P.x||[];
+let FOTOS=[];
+const fotoDe=(sn,dn)=>FOTOS.find(f=>f.s===sn&&f.n===dn);
+function irFoto(k){const f=FOTOS[k];const i=X().findIndex(s=>s.n===f.s);if(i<0)return;const g=(X()[i].g||[]).findIndex(x=>x[0]===f.n);r={paso:1,i,v:0,x:[],g,f:'',h:null};render();scrollTo(0,0)}
+function verFoto(k){const f=FOTOS[k];const d=document.createElement('div');d.className='lb';d.onclick=()=>d.remove();d.innerHTML=`<img src="${f.i}" alt=""><b>${esc(f.n)}</b><small>${esc(f.s)}</small>`;document.body.appendChild(d)}
 function sel(){const s=X()[r.i];if(!s)return null;const v=(s.v||[])[r.v],g=(s.g||[])[r.g];const es=(r.x||[]).map(k=>s.e[k]).filter(Boolean);
   const lab=etiqueta(s.n,v?v[0]:'',es.map(e=>e[0]),g?g[0]:'');let idx=(P.s||[]).findIndex(z=>z[0]===lab);
   if(idx<0){const lab2=etiqueta(s.n,v?v[0]:'',es.map(e=>e[0]),'');idx=(P.s||[]).findIndex(z=>z[0]===lab2)}
@@ -234,6 +250,7 @@ function render(){
   if(r.paso===0){
     const rubs=[...new Set(X().map(s=>s.r))];
     V(`<div class="hero"><span class="deco" style="left:0;top:6px">${flor(t.v.acc,48,.55)}</span><span class="deco" style="right:0;top:34px">${flor(t.v.plum2,64,.7)}</span><div class="lg">${logoSVG(...t.lg)}</div><h1 style="font-family:'Dancing Script',cursive;font-size:40px;color:var(--plum);line-height:1.05">${esc(P.n||'Tu salón')}</h1><p class="muted">Reserva tu hora en 1 minuto ✿</p></div>${pasos}
+    ${FOTOS.length?`<div class="card" style="padding:12px 0 12px 14px"><b style="display:block;margin-bottom:8px">✨ Nuestros trabajos</b><div class="gal">${FOTOS.map((f,k)=>`<button onclick="irFoto(${k})"><img src="${f.i}" alt="" loading="lazy"><span>${esc(f.n)}</span></button>`).join('')}</div><p class="muted" style="font-size:12px;margin:6px 14px 0 0">Toca un diseño para reservarlo.</p></div>`:''}
     ${rubs.map(rb=>`<div class="card"><div class="row" style="margin-bottom:4px"><span class="dot" style="background:${(RUB[rb]||['',t.v.plum])[1]}"></span><b>${(RUB[rb]||[rb])[0]}</b></div>
      ${X().map((s,i)=>s.r!==rb?'':`<div class="svc" onclick="r={paso:${(s.v||[]).length||(s.e||[]).length||(s.g||[]).length?1:2},i:${i},v:0,x:[],g:-1,f:'',h:null};render()"><span>${esc(s.n)}<br><span class="muted">${dur(s.m)}${(s.v||[]).length?' o más, según largo':''}</span></span><b style="white-space:nowrap">desde ${clp(s.p)}</b></div>`).join('')}</div>`).join('')}
     ${P.w?`<p class="foot"><a href="https://wa.me/${esc(P.w)}" target="_blank" rel="noopener" style="color:var(--plum)">¿Dudas? Escríbenos por WhatsApp</a></p>`:''}<p class="foot">Reservas con Mimo ✦</p>`);return}
@@ -244,7 +261,7 @@ function render(){
     V(`${pasos}<div class="row between"><button class="ghost sm" onclick="r={paso:0};render()">‹ Atrás</button><h3>${esc(s.n)}</h3><span></span></div>
     ${(s.v||[]).length?`<label>¿Qué largo tienes?</label><div class="chips">${s.v.map((v,k)=>`<button class="chip ${r.v===k?'on':''}" onclick="r.v=${k};render()">${esc(v[0])}</button>`).join('')}</div>`:''}
     ${(s.e||[]).length?`<label>¿Necesitas algo más?</label><div class="chips">${s.e.map((e,k)=>`<button class="chip ${r.x.includes(k)?'on':''}" onclick="r.x=r.x.includes(${k})?r.x.filter(z=>z!==${k}):[...r.x,${k}];render()">${esc(e[0])}${e[2]?' (+'+clp(e[2])+')':''}</button>`).join('')}</div>`:''}
-    ${(s.g||[]).length?`<label>Diseño (opcional)</label><div class="chips">${s.g.map((g,k)=>`<button class="chip ${r.g===k?'on':''}" onclick="r.g=r.g===${k}?-1:${k};render()">${esc(g[0])}${g[2]?' (+'+clp(g[2])+')':''}</button>`).join('')}</div><p class="muted">¿Quieres ver fotos de los diseños? Pídeselas al salón por WhatsApp.</p>`:''}
+    ${(s.g||[]).length?(s.g.some(g=>fotoDe(s.n,g[0]))?`<label>Diseño (opcional)</label><div class="dgrid">${s.g.map((g,k)=>{const f=fotoDe(s.n,g[0]);return`<button class="dcard ${r.g===k?'on':''}" onclick="r.g=r.g===${k}?-1:${k};render()">${f?`<img src="${f.i}" alt="" loading="lazy">`:'<div class="ph">✨</div>'}<b>${esc(g[0])}</b><span>${g[2]?'+'+clp(g[2]):'Sin costo extra'}</span></button>`}).join('')}</div>`:`<label>Diseño (opcional)</label><div class="chips">${s.g.map((g,k)=>`<button class="chip ${r.g===k?'on':''}" onclick="r.g=r.g===${k}?-1:${k};render()">${esc(g[0])}${g[2]?' (+'+clp(g[2])+')':''}</button>`).join('')}</div><p class="muted">¿Quieres ver fotos de los diseños? Pídeselas al salón por WhatsApp.</p>`):''}
     ${res}<button style="width:100%;margin-top:12px" ${c?'':'disabled'} onclick="r.paso=2;render()">Elegir día y hora</button>`);return}
   if(r.paso===2){
     const ds=diasDisp();if(!r.f){r.f=ds.find(f=>libres(f,c.m).length)||ds[0];r.mes=(r.f||hoyF()).slice(0,7)}
