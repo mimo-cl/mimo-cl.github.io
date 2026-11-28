@@ -86,10 +86,19 @@ function ver(k){document.getElementById('vA').classList.toggle('hide',k!=='a');d
 function copiar(){navigator.clipboard.writeText('https://mimo-cl.github.io/descargar').then(()=>alertita('Enlace copiado: pégalo en Safari')).catch(()=>{})}
 function alertita(t){const d=document.createElement('div');d.textContent=t;d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4a3a4f;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:9';document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
 ver(ios?'i':'a');
+// Contador de visitas (para el panel): 1 por teléfono al día, con su origen (tiktok, instagram, etc.)
+const API_V='https://script.google.com/macros/s/AKfycbzVAXe-wM8xVHy9DOyh-EbtR9cfySFpLNvnYqR4-ZqMQR1GYJzkrj-Sovw02bKuq2AH/exec';
+function origen(){const q=new URLSearchParams(location.search),f=(q.get('f')||q.get('utm_source')||'').toLowerCase();if(f)return f.slice(0,20);
+ if(/musical_ly|Bytedance|TikTok/i.test(ua))return 'tiktok';if(/Instagram/i.test(ua))return 'instagram';if(/FBAN|FBAV/i.test(ua))return 'facebook';
+ const r=document.referrer;if(!r)return 'directo';try{const h=new URL(r).hostname.replace(/^www\.|^m\./,'');if(h===location.hostname)return 'directo';
+ for(const k of ['tiktok','instagram','facebook','whatsapp','google','youtube'])if(h.indexOf(k)>=0)return k;return h.slice(0,20)}catch(e){return 'directo'}}
+function contar(p){try{const dia=new Date().toISOString().slice(0,10),k='mv_'+p;if(localStorage.getItem(k)===dia)return;localStorage.setItem(k,dia);
+ fetch(API_V+'?accion=visita&p='+encodeURIComponent(p)+'&f='+encodeURIComponent(origen())+'&t='+Date.now(),{mode:'no-cors',keepalive:true}).catch(()=>{})}catch(e){}}
+contar('descargar');
 if(/musical_ly|Bytedance|TikTok|Instagram|FBAN|FBAV/i.test(ua))document.getElementById('inapp').classList.remove('hide');
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});
-window.addEventListener('appinstalled',()=>alertita('¡Mimo quedó instalada! Búscala en tu inicio 💅'));
-function instalar(){if(dp){dp.prompt();dp.userChoice.finally(()=>dp=null);return}
+window.addEventListener('appinstalled',()=>{contar('descargar·instalada');alertita('¡Mimo quedó instalada! Búscala en tu inicio 💅')});
+function instalar(){contar('descargar·instalar');if(dp){dp.prompt();dp.userChoice.finally(()=>dp=null);return}
  if(window.matchMedia('(display-mode: standalone)').matches){location.href='./';return}
  alertita('Toca ⋮ arriba → "Instalar app"');}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
