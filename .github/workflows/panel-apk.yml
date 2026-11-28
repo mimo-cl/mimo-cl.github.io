@@ -1,0 +1,34 @@
+name: APK del panel
+on:
+  push:
+    paths:
+      - 'panel-apk/*.zip'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descomprimir el proyecto
+        run: unzip -o panel-apk/panel-android.zip -d proyecto
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+      - name: Compilar APK
+        run: gradle assembleRelease --no-daemon
+        working-directory: proyecto
+      - name: Guardar la APK en panel/panel.apk
+        run: |
+          cp proyecto/app/build/outputs/apk/release/app-release.apk panel/panel.apk
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add panel/panel.apk
+          git commit -m "APK del panel" || exit 0
+          git pull --rebase
+          git push
