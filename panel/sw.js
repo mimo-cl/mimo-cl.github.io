@@ -1,5 +1,5 @@
 // Panel: guarda la app para abrirla sin internet (los datos los guarda la página).
-const V = 'panel-v1';
+const V = 'panel-v2';
 const ARCH = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(V).then(c => c.addAll(ARCH)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('panel-') && k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())));

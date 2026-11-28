@@ -72,12 +72,23 @@ details summary{cursor:pointer;color:var(--t2);font-size:13px;margin-top:6px}
   <img src="icon-192.png" alt="" width="72" height="72" style="border-radius:18px">
   <h1 style="margin-top:12px">Panel de mis apps</h1>
   <p class="muted">Mimo · Silla · Contador de Bolsillo</p>
-  <form onsubmit="entrar(event)">
-    <input id="clave" type="password" autocomplete="current-password" placeholder="Clave" required>
-    <label class="muted" style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px"><input type="checkbox" id="recordar" checked style="width:auto;margin:0"> Recordar en este teléfono</label>
-    <button class="btn pri" id="bEntrar">Entrar</button>
-  </form>
+  <div id="paso1">
+    <p>Este teléfono todavía no está aprobado.</p>
+    <button class="btn pri" id="bPedir" onclick="pedirAcceso()" style="width:100%;padding:13px">Aprobar este teléfono</button>
+    <p class="tiny">Te llega un correo a tu Gmail con un enlace. Lo tocas una vez y listo: no hay clave que recordar.</p>
+  </div>
+  <div id="paso2" class="hide">
+    <p>📩 Te mandé un correo. Ábrelo y toca el enlace <b>“aprobar”</b>.</p>
+    <button class="btn pri" id="bYa" onclick="yaAprobe()" style="width:100%;padding:13px">Ya lo aprobé</button>
+    <p class="tiny"><a href="#" onclick="pedirAcceso(true);return false" style="color:inherit">Volver a enviar el correo</a></p>
+  </div>
   <div class="err" id="err"></div>
+  <details style="margin-top:26px"><summary>Entrar con clave (opcional)</summary>
+    <form onsubmit="entrar(event)">
+      <input id="clave" type="password" autocomplete="current-password" placeholder="Clave (ADMIN_CLAVE)" required>
+      <button class="btn" id="bEntrar" style="width:100%;padding:11px">Entrar con clave</button>
+    </form>
+  </details>
 </section>
 
 <section id="app" class="hide">
@@ -86,7 +97,6 @@ details summary{cursor:pointer;color:var(--t2);font-size:13px;margin-top:6px}
     <div><h1>Mis apps</h1><div class="tiny" id="gen"></div></div>
     <div class="sp"></div>
     <button class="btn" onclick="cargar()" id="bAct">↻ Actualizar</button>
-    <button class="btn" onclick="salir()" title="Cerrar sesión">Salir</button>
   </div>
   <div class="aviso" id="aviso"></div>
 
@@ -169,48 +179,83 @@ let D = null, clave = '', rango = 30, filtroSubs = 'todos';
 function guardada(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function guardar(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) { } }
 
+// Cada teléfono tiene su propia llave secreta (se crea sola). Se aprueba una vez por correo.
+function miToken() {
+  let t = guardada('panel_token');
+  if (!t || t.length < 64) { const b = new Uint8Array(32); crypto.getRandomValues(b); t = Array.from(b, x => x.toString(16).padStart(2, '0')).join(''); guardar('panel_token', t); }
+  return t;
+}
+const enApp = /; wv\)/.test(navigator.userAgent);
+
 function inicio() {
-  clave = guardada('panel_clave') || sessionStorage.getItem('panel_clave') || '';
+  clave = guardada('panel_clave') || '';
   const cache = guardada('panel_datos');
-  if (clave && cache) { try { D = JSON.parse(cache); mostrar(); } catch (e) { } }
-  if (clave) { $('app').classList.remove('hide'); cargar(); } else $('login').classList.remove('hide');
+  if (cache) { try { D = JSON.parse(cache); $('app').classList.remove('hide'); mostrar(); } catch (e) { } }
+  cargar(true);
 }
 
-async function pedir(c) {
-  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ accion: 'admin', clave: c }) });
+async function pedir() {
+  const body = { accion: 'admin', token: miToken() };
+  if (clave) body.clave = clave;
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) });
   return r.json();
+}
+
+function verLogin(paso2) {
+  $('app').classList.add('hide'); $('login').classList.remove('hide');
+  $('paso1').classList.toggle('hide', !!paso2); $('paso2').classList.toggle('hide', !paso2);
+}
+
+async function pedirAcceso(reenviar) {
+  $('err').textContent = ''; $('bPedir').disabled = true;
+  try {
+    const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ accion: 'acceso', token: miToken(), nombre: enApp ? 'App Panel (Android)' : 'Navegador del teléfono' }) }).then(x => x.json());
+    if (r.ok && r.estado === 'aprobado') return yaAprobe();
+    if (!r.ok) { $('err').textContent = r.error === 'muchos' ? 'Hay muchas solicitudes pendientes. Revisa tu correo.' : 'No se pudo pedir acceso. Intenta de nuevo.'; return; }
+    verLogin(true);
+    if (reenviar && r.yaEnviado) $('err').textContent = 'El correo ya se envió hace poco: revisa tu Gmail (también en Spam).';
+  } catch (e) { $('err').textContent = 'Sin conexión. Intenta de nuevo.'; }
+  finally { $('bPedir').disabled = false; }
+}
+
+async function yaAprobe() {
+  $('err').textContent = ''; $('bYa').disabled = true; $('bYa').textContent = 'Revisando…';
+  try {
+    const d = await pedir();
+    if (d.ok) { D = d; guardar('panel_datos', JSON.stringify(d)); $('login').classList.add('hide'); $('app').classList.remove('hide'); mostrar(); }
+    else $('err').textContent = 'Todavía no aparece aprobado. Toca el enlace del correo y vuelve a intentar.';
+  } catch (e) { $('err').textContent = 'Sin conexión. Intenta de nuevo.'; }
+  finally { $('bYa').disabled = false; $('bYa').textContent = 'Ya lo aprobé'; }
 }
 
 async function entrar(e) {
   e.preventDefault();
-  const c = $('clave').value; $('err').textContent = ''; $('bEntrar').disabled = true; $('bEntrar').textContent = 'Entrando…';
+  clave = $('clave').value; $('err').textContent = ''; $('bEntrar').disabled = true;
   try {
-    const d = await pedir(c);
-    if (!d.ok) { $('err').textContent = { clave: 'Clave incorrecta.', bloqueado: 'Demasiados intentos. Espera 15 minutos.', 'sin-clave': 'Falta configurar ADMIN_CLAVE en el Apps Script.' }[d.error] || 'No se pudo entrar.'; return; }
-    clave = c;
-    if ($('recordar').checked) guardar('panel_clave', c); else sessionStorage.setItem('panel_clave', c);
+    const d = await pedir();
+    if (!d.ok) { clave = ''; $('err').textContent = { clave: 'Clave incorrecta.', bloqueado: 'Demasiados intentos. Espera 15 minutos.', 'sin-clave': 'No hay clave configurada: usa "Aprobar este teléfono".' }[d.error] || 'No se pudo entrar.'; return; }
+    guardar('panel_clave', clave);
     D = d; guardar('panel_datos', JSON.stringify(d));
     $('login').classList.add('hide'); $('app').classList.remove('hide'); mostrar();
   } catch (x) { $('err').textContent = 'Sin conexión. Intenta de nuevo.'; }
-  finally { $('bEntrar').disabled = false; $('bEntrar').textContent = 'Entrar'; }
+  finally { $('bEntrar').disabled = false; }
 }
 
-async function cargar() {
+async function cargar(inicial) {
   $('bAct').textContent = '↻ …'; $('aviso').style.display = 'none';
   try {
-    const d = await pedir(clave);
+    const d = await pedir();
     if (!d.ok) {
-      if (d.error === 'clave' || d.error === 'sin-clave') { salir(); $('err').textContent = 'La clave cambió: vuelve a entrar.'; return; }
+      if (['no-aprobado', 'clave', 'sin-clave'].includes(d.error)) { guardar('panel_clave', null); clave = ''; guardar('panel_datos', null); D = null; verLogin(false); return; }
       throw new Error(d.error);
     }
-    D = d; guardar('panel_datos', JSON.stringify(d)); mostrar();
+    D = d; guardar('panel_datos', JSON.stringify(d)); $('login').classList.add('hide'); $('app').classList.remove('hide'); mostrar();
   } catch (x) {
-    $('aviso').textContent = D ? '📴 Sin conexión: mostrando datos del ' + D.generado + '.' : '📴 Sin conexión y sin datos guardados todavía.';
+    if (!D) { verLogin(false); $('err').textContent = 'Sin conexión. Conéctate una vez para entrar.'; return; }
+    $('aviso').textContent = '📴 Sin conexión: mostrando datos del ' + D.generado + '.';
     $('aviso').style.display = 'block';
   } finally { $('bAct').textContent = innerWidth < 500 ? '↻' : '↻ Actualizar'; }
 }
-
-function salir() { guardar('panel_clave', null); guardar('panel_datos', null); sessionStorage.removeItem('panel_clave'); clave = ''; D = null; $('app').classList.add('hide'); $('login').classList.remove('hide'); $('clave').value = ''; }
 
 /* ---------- pintar ---------- */
 function mostrar() {
