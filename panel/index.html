@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Panel · Mis apps</title>
+<meta name="theme-color" content="#111418">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{color-scheme:light;--bg:#f4f5f7;--s1:#ffffff;--s2:#eef0f3;--line:#e1e4e8;--t1:#191919;--t2:#666;--t3:#8b8f96;
+ --c1:#257de0;--c2:#f47230;--c3:#00b894;--ok:#008a17;--warn:#b07800;--bad:#d03b3c;--acc:#191919;--grid:#e8eaee}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#0f1114;--s1:#191919;--s2:#232529;--line:#2c2f34;--t1:#efefef;--t2:#9c9c9c;--t3:#7a7d83;
+ --c1:#338ced;--c2:#e76624;--c3:#00a888;--ok:#0aac23;--warn:#d28e05;--bad:#eb6263;--acc:#efefef;--grid:#26292e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t1);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:980px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 14px 60px}
+h1{font-size:20px;margin:0}h2{font-size:15px;margin:0 0 10px;font-weight:700}
+.top .btn{white-space:nowrap}.top{display:flex;align-items:center;gap:10px;margin:6px 0 14px}.top .sp{flex:1}
+.muted{color:var(--t2);font-size:13px}.tiny{color:var(--t3);font-size:12px}
+button,select,input{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--s1);border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:600}
+.btn.pri{background:var(--acc);color:var(--bg);border-color:transparent}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.grid{display:grid;gap:10px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:700px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}}
+.kpi{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi .v{font-size:26px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12.5px;color:var(--t2)}
+.app{display:flex;align-items:center;gap:8px;font-weight:700}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.rows{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin-top:8px;font-variant-numeric:tabular-nums}
+.rows span:nth-child(odd){color:var(--t2)}
+.estados{display:flex;gap:6px;margin-top:10px}
+.est{flex:1;background:var(--s2);border-radius:10px;padding:7px 8px;text-align:center}
+.est b{display:block;font-size:18px;font-variant-numeric:tabular-nums}.est small{font-size:11.5px;color:var(--t2)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:var(--s1);border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--t2)}
+.tabs button.on{background:var(--acc);color:var(--bg);border-color:transparent}
+.head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.head h2{margin:0;flex:1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--t2);margin:4px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--t3);font-size:11px}
+.tip{position:fixed;pointer-events:none;background:var(--s1);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 8px 24px -8px rgba(0,0,0,.35);z-index:20;display:none;min-width:120px}
+.tip b{display:block;margin-bottom:3px}.tip div{display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{text-align:left;color:var(--t2);font-weight:600;font-size:12px;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.pill.activo{color:var(--ok)}.pill.vencido{color:var(--bad)}.pill.prueba{color:var(--warn)}
+details summary{cursor:pointer;color:var(--t2);font-size:13px;margin-top:6px}
+#login{max-width:360px;margin:16vh auto 0;text-align:center}
+#login input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--s1);margin:14px 0 10px;font-size:17px}
+#login .btn{width:100%;padding:13px}
+.err{color:var(--bad);font-size:13.5px;min-height:20px;margin-top:8px}
+.aviso{background:var(--s2);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:12px;display:none}
+.empty{color:var(--t3);font-size:13px;padding:14px 0;text-align:center}
+.hide{display:none!important}
+.bar-row{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:8px;margin:5px 0;font-size:13px}
+.bar-row .tr{height:12px;background:var(--s2);border-radius:4px;overflow:hidden}.bar-row .tr i{display:block;height:100%;border-radius:0 4px 4px 0}
+.bar-row .n{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<main>
+<section id="login" class="hide">
+  <img src="icon-192.png" alt="" width="72" height="72" style="border-radius:18px">
+  <h1 style="margin-top:12px">Panel de mis apps</h1>
+  <p class="muted">Mimo · Silla · Contador de Bolsillo</p>
+  <form onsubmit="entrar(event)">
+    <input id="clave" type="password" autocomplete="current-password" placeholder="Clave" required>
+    <label class="muted" style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px"><input type="checkbox" id="recordar" checked style="width:auto;margin:0"> Recordar en este teléfono</label>
+    <button class="btn pri" id="bEntrar">Entrar</button>
+  </form>
+  <div class="err" id="err"></div>
+</section>
+
+<section id="app" class="hide">
+  <div class="top">
+    <img src="icon-192.png" alt="" width="34" height="34" style="border-radius:9px">
+    <div><h1>Mis apps</h1><div class="tiny" id="gen"></div></div>
+    <div class="sp"></div>
+    <button class="btn" onclick="cargar()" id="bAct">↻ Actualizar</button>
+    <button class="btn" onclick="salir()" title="Cerrar sesión">Salir</button>
+  </div>
+  <div class="aviso" id="aviso"></div>
+
+  <!-- 1 + 4: resumen -->
+  <div class="grid g4" style="margin-bottom:12px">
+    <div class="kpi"><div class="l">Usuarios totales</div><div class="v" id="kTot">–</div><div class="tiny" id="kTotS"></div></div>
+    <div class="kpi"><div class="l">Nuevos este mes</div><div class="v" id="kMes">–</div><div class="tiny" id="kMesS"></div></div>
+    <div class="kpi"><div class="l">Ingresos del mes</div><div class="v" id="kIng">–</div><div class="tiny" id="kIngS"></div></div>
+    <div class="kpi"><div class="l">Estimado mensual</div><div class="v" id="kMrr">–</div><div class="tiny">suscripciones activas ÷ meses del plan</div></div>
+  </div>
+
+  <!-- 1 + 2: por app -->
+  <div class="grid g3" id="apps" style="margin-bottom:12px"></div>
+
+  <!-- 1: gráfico de nuevos -->
+  <div class="card">
+    <div class="head"><h2>Usuarios nuevos por día</h2>
+      <div class="tabs" id="tRango"><button data-d="14">14 días</button><button data-d="30" class="on">30 días</button><button data-d="90">90 días</button></div></div>
+    <div class="legend" id="legNuevos"></div>
+    <div id="chNuevos"></div>
+    <details><summary>Ver como tabla</summary><div class="scroll" id="tbNuevos"></div></details>
+  </div>
+
+  <!-- 3: suscriptores -->
+  <div class="card">
+    <div class="head"><h2>Suscriptores</h2>
+      <div class="tabs" id="tSubs"><button data-f="todos" class="on">Todos</button><button data-f="activo">Activos</button><button data-f="vencido">Vencidos</button></div>
+      <select id="sApp" class="btn" style="padding:5px 8px;font-size:13px"><option value="">Todas las apps</option><option>Mimo</option><option>Silla</option><option>Contador</option></select></div>
+    <div class="scroll"><table><thead><tr><th>Negocio</th><th>App</th><th>Plan</th><th class="n">Monto</th><th>Vence</th><th>Estado</th></tr></thead><tbody id="tbSubs"></tbody></table></div>
+    <div class="empty hide" id="subsVacio">Todavía no hay suscriptores que hayan pagado.</div>
+  </div>
+
+  <!-- 4: ingresos -->
+  <div class="card">
+    <div class="head"><h2>Ingresos por mes</h2></div>
+    <div id="chIng"></div>
+    <div class="legend" id="legIng" style="margin-top:8px"></div>
+  </div>
+
+  <!-- 5: reservas -->
+  <div class="card">
+    <div class="head"><h2>Reservas por enlace</h2><span class="tiny">¿la usan de verdad?</span></div>
+    <div class="scroll"><table><thead><tr><th>App</th><th class="n">Hoy</th><th class="n">Semana</th><th class="n">Mes</th><th class="n">30 días</th><th class="n">Negocios con reservas (30 d)</th><th class="n">Total</th></tr></thead><tbody id="tbRes"></tbody></table></div>
+    <h2 style="margin-top:16px">Negocios con más reservas (30 días)</h2>
+    <div id="topRes"></div>
+  </div>
+
+  <!-- 6: visitas -->
+  <div class="card">
+    <div class="head"><h2>Visitas a mimo-cl.github.io/descargar</h2><span class="tiny">1 por teléfono al día</span></div>
+    <div class="grid g4" style="margin-bottom:10px">
+      <div class="kpi" style="background:var(--s2);border:0"><div class="l">Hoy</div><div class="v" id="vHoy">–</div></div>
+      <div class="kpi" style="background:var(--s2);border:0"><div class="l">Esta semana</div><div class="v" id="vSem">–</div></div>
+      <div class="kpi" style="background:var(--s2);border:0"><div class="l">Este mes</div><div class="v" id="vMes">–</div></div>
+      <div class="kpi" style="background:var(--s2);border:0"><div class="l">Tocaron "Instalar" (mes)</div><div class="v" id="vInst">–</div><div class="tiny" id="vInstS"></div></div>
+    </div>
+    <div id="chVis"></div>
+    <h2 style="margin-top:14px">¿De dónde llegan? (este mes)</h2>
+    <div id="fuentes"></div>
+    <p class="tiny" style="margin-top:10px">Para medir TikTok, usa este enlace en tu bio y videos: <b>mimo-cl.github.io/descargar?f=tiktok</b> (igual cuenta "tiktok" si lo abren dentro de la app de TikTok).</p>
+  </div>
+  <p class="tiny" style="text-align:center">Los datos se guardan en este teléfono: si no hay internet, ves la última actualización.</p>
+</section>
+</main>
+<div class="tip" id="tip"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzVAXe-wM8xVHy9DOyh-EbtR9cfySFpLNvnYqR4-ZqMQR1GYJzkrj-Sovw02bKuq2AH/exec';
+const APPS = ['Mimo', 'Silla', 'Contador'];
+const NOMBRE = { Mimo: 'Mimo', Silla: 'Silla', Contador: 'Contador de Bolsillo' };
+const COL = { Mimo: 'var(--c1)', Silla: 'var(--c2)', Contador: 'var(--c3)' };
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n || 0).toLocaleString('es-CL');
+const clp = n => '$' + fmt(Math.round(n || 0));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const fCorta = f => { const [y, m, d] = f.split('-'); return +d + ' ' + MES[+m - 1]; };
+let D = null, clave = '', rango = 30, filtroSubs = 'todos';
+
+function guardada(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function guardar(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) { } }
+
+function inicio() {
+  clave = guardada('panel_clave') || sessionStorage.getItem('panel_clave') || '';
+  const cache = guardada('panel_datos');
+  if (clave && cache) { try { D = JSON.parse(cache); mostrar(); } catch (e) { } }
+  if (clave) { $('app').classList.remove('hide'); cargar(); } else $('login').classList.remove('hide');
+}
+
+async function pedir(c) {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ accion: 'admin', clave: c }) });
+  return r.json();
+}
+
+async function entrar(e) {
+  e.preventDefault();
+  const c = $('clave').value; $('err').textContent = ''; $('bEntrar').disabled = true; $('bEntrar').textContent = 'Entrando…';
+  try {
+    const d = await pedir(c);
+    if (!d.ok) { $('err').textContent = { clave: 'Clave incorrecta.', bloqueado: 'Demasiados intentos. Espera 15 minutos.', 'sin-clave': 'Falta configurar ADMIN_CLAVE en el Apps Script.' }[d.error] || 'No se pudo entrar.'; return; }
+    clave = c;
+    if ($('recordar').checked) guardar('panel_clave', c); else sessionStorage.setItem('panel_clave', c);
+    D = d; guardar('panel_datos', JSON.stringify(d));
+    $('login').classList.add('hide'); $('app').classList.remove('hide'); mostrar();
+  } catch (x) { $('err').textContent = 'Sin conexión. Intenta de nuevo.'; }
+  finally { $('bEntrar').disabled = false; $('bEntrar').textContent = 'Entrar'; }
+}
+
+async function cargar() {
+  $('bAct').textContent = '↻ …'; $('aviso').style.display = 'none';
+  try {
+    const d = await pedir(clave);
+    if (!d.ok) {
+      if (d.error === 'clave' || d.error === 'sin-clave') { salir(); $('err').textContent = 'La clave cambió: vuelve a entrar.'; return; }
+      throw new Error(d.error);
+    }
+    D = d; guardar('panel_datos', JSON.stringify(d)); mostrar();
+  } catch (x) {
+    $('aviso').textContent = D ? '📴 Sin conexión: mostrando datos del ' + D.generado + '.' : '📴 Sin conexión y sin datos guardados todavía.';
+    $('aviso').style.display = 'block';
+  } finally { $('bAct').textContent = innerWidth < 500 ? '↻' : '↻ Actualizar'; }
+}
+
+function salir() { guardar('panel_clave', null); guardar('panel_datos', null); sessionStorage.removeItem('panel_clave'); clave = ''; D = null; $('app').classList.add('hide'); $('login').classList.remove('hide'); $('clave').value = ''; }
+
+/* ---------- pintar ---------- */
+function mostrar() {
+  if (!D) return;
+  const A = D.apps;
+  $('gen').textContent = 'Actualizado ' + D.generado;
+  const tot = APPS.reduce((s, a) => s + A[a].total, 0);
+  $('kTot').textContent = fmt(tot);
+  $('kTotS').textContent = 'Hoy +' + APPS.reduce((s, a) => s + A[a].hoy, 0) + ' · semana +' + APPS.reduce((s, a) => s + A[a].semana, 0);
+  $('kMes').textContent = fmt(APPS.reduce((s, a) => s + A[a].mes, 0));
+  $('kMesS').textContent = APPS.map(a => a + ' ' + A[a].mes).join(' · ');
+  $('kIng').textContent = clp(D.ingresos.mes);
+  $('kIngS').textContent = D.ingresos.pagosMes + ' pago' + (D.ingresos.pagosMes === 1 ? '' : 's') + ' este mes';
+  $('kMrr').textContent = clp(D.ingresos.estimadoMensual);
+
+  $('apps').innerHTML = APPS.map(a => {
+    const x = A[a];
+    return `<div class="card" style="margin:0"><div class="app"><span class="dot" style="background:${COL[a]}"></span>${NOMBRE[a]}<span style="flex:1"></span><span style="font-size:22px;font-variant-numeric:tabular-nums">${fmt(x.total)}</span></div>
+      <div class="rows"><span>Nuevos hoy</span><span>${x.hoy}</span><span>Esta semana</span><span>${x.semana}</span><span>Este mes</span><span>${x.mes}</span><span>Ingresos del mes</span><span>${clp(D.ingresos.porApp[a])}</span></div>
+      <div class="estados"><div class="est"><b>${x.prueba}</b><small>⏳ En prueba</small></div><div class="est"><b style="color:var(--ok)">${x.pagando}</b><small>✓ Pagando</small></div><div class="est"><b style="color:var(--bad)">${x.vencido}</b><small>✕ Vencidos</small></div></div></div>`;
+  }).join('');
+
+  graficoNuevos(); tablaSubs(); graficoIngresos(); reservas(); visitas();
+}
+
+function dias(n) {
+  const hoy = D.rangos.hoy, out = [];
+  const base = new Date(hoy + 'T12:00:00');
+  for (let i = n - 1; i >= 0; i--) { const d = new Date(base); d.setDate(d.getDate() - i); out.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')); }
+  return out;
+}
+
+const tip = $('tip');
+function verTip(ev, html) { tip.innerHTML = html; tip.style.display = 'block'; const w = tip.offsetWidth, h = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY - h - 10; if (x + w > innerWidth - 8) x = ev.clientX - w - 14; if (y < 8) y = ev.clientY + 16; tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+function ocultarTip() { tip.style.display = 'none'; }
+document.addEventListener('scroll', ocultarTip, { passive: true });
+
+// Barras apiladas (series = apps) o simples. data: [{k, label, vals:{serie:n}}]
+function barras(cont, data, series, colores, opts) {
+  opts = opts || {};
+  const W = Math.max(280, cont.clientWidth || 640), H = opts.h || (W < 500 ? 170 : 200), L = 34, R = 6, T = 8, B = 24;
+  const max = Math.max(1, ...data.map(d => series.reduce((s, k) => s + (d.vals[k] || 0), 0)));
+  const paso = max <= 4 ? 1 : Math.ceil(max / 4 / (opts.money ? 1000 : 1)) * (opts.money ? 1000 : 1);
+  const top = Math.ceil(max / paso) * paso;
+  const iw = W - L - R, ih = H - T - B, bw = iw / data.length, g = Math.min(Math.max(bw * 0.25, 1), 10), w = Math.max(bw - g, 1);
+  const y = v => T + ih - v / top * ih;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.aria || '')}">`;
+  for (let v = 0; v <= top; v += paso) s += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${opts.money ? (v >= 1000 ? Math.round(v / 1000) + 'k' : v) : v}</text>`;
+  const cada = Math.ceil(data.length / Math.min(opts.etiquetas || 7, Math.floor(W / 62)));
+  data.forEach((d, i) => {
+    const x = L + i * bw + g / 2;
+    let acum = 0;
+    const tot = series.reduce((s2, k) => s2 + (d.vals[k] || 0), 0);
+    series.forEach((k, j) => {
+      const v = d.vals[k] || 0; if (!v) return;
+      const y1 = y(acum + v), y0 = y(acum), hh = Math.max(y0 - y1 - (acum ? 2 : 0), 1);
+      const esTop = series.slice(j + 1).every(k2 => !(d.vals[k2]));
+      const rr = esTop ? Math.min(4, w / 2, hh) : 0;
+      s += rr ? `<path d="M${x},${y0 - (acum ? 2 : 0)} V${y1 + rr} Q${x},${y1} ${x + rr},${y1} H${x + w - rr} Q${x + w},${y1} ${x + w},${y1 + rr} V${y0 - (acum ? 2 : 0)} Z" fill="${colores[j]}"/>`
+        : `<rect x="${x}" y="${y1}" width="${w}" height="${hh}" fill="${colores[j]}"/>`;
+      acum += v;
+    });
+    if (i % cada === (data.length - 1) % cada) s += `<text x="${x + w / 2}" y="${H - 6}" text-anchor="middle">${esc(d.label)}</text>`;
+    s += `<rect class="hit" data-i="${i}" x="${L + i * bw}" y="${T}" width="${bw}" height="${ih}" fill="transparent"/>`;
+  });
+  s += `<line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--t3)" stroke-width="1"/></svg>`;
+  cont.innerHTML = s;
+  cont.querySelectorAll('.hit').forEach(r => {
+    const d = data[+r.dataset.i];
+    const html = `<b>${esc(d.titulo || d.label)}</b>` + series.map((k, j) => `<div><span><span class="dot" style="background:${colores[j]};margin-right:6px"></span>${esc(opts.nombres ? opts.nombres[j] : k)}</span><span>${opts.money ? clp(d.vals[k]) : fmt(d.vals[k] || 0)}</span></div>`).join('') +
+      (series.length > 1 ? `<div style="border-top:1px solid var(--line);margin-top:4px;padding-top:4px"><span>Total</span><span>${opts.money ? clp(series.reduce((a, k) => a + (d.vals[k] || 0), 0)) : fmt(series.reduce((a, k) => a + (d.vals[k] || 0), 0))}</span></div>` : '');
+    r.addEventListener('pointermove', ev => { r.setAttribute('fill', 'rgba(127,127,127,.08)'); verTip(ev, html); });
+    r.addEventListener('pointerleave', () => { r.setAttribute('fill', 'transparent'); ocultarTip(); });
+  });
+}
+
+function leyenda(el, items) { el.innerHTML = items.map(([n, c]) => `<span><span class="dot" style="background:${c}"></span>${esc(n)}</span>`).join(''); }
+
+function graficoNuevos() {
+  const ds = dias(rango);
+  const data = ds.map(f => ({ k: f, label: fCorta(f), vals: D.diario[f] || {} }));
+  leyenda($('legNuevos'), APPS.map(a => [NOMBRE[a] + ' (' + data.reduce((s, d) => s + (d.vals[a] || 0), 0) + ')', COL[a]]));
+  barras($('chNuevos'), data, APPS, APPS.map(a => COL[a]), { nombres: APPS.map(a => NOMBRE[a]), aria: 'Usuarios nuevos por día', etiquetas: rango > 30 ? 9 : 7 });
+  $('tbNuevos').innerHTML = '<table><thead><tr><th>Día</th>' + APPS.map(a => `<th class="n">${a}</th>`).join('') + '</tr></thead><tbody>' +
+    data.slice().reverse().filter(d => APPS.some(a => d.vals[a])).map(d => `<tr><td>${d.label}</td>${APPS.map(a => `<td class="n">${d.vals[a] || 0}</td>`).join('')}</tr>`).join('') + '</tbody></table>';
+}
+$('tRango').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; rango = +b.dataset.d; $('tRango').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); graficoNuevos(); });
+
+function tablaSubs() {
+  const app = $('sApp').value;
+  const lista = D.suscriptores.filter(s => (filtroSubs === 'todos' || s.estado === filtroSubs) && (!app || s.app === app));
+  $('subsVacio').classList.toggle('hide', lista.length > 0);
+  const plan = m => m ? (m === 1 ? '1 mes' : m === 12 ? '12 meses' : m + ' meses') : '—';
+  $('tbSubs').innerHTML = lista.map(s => `<tr><td><b>${esc(s.negocio || '(sin nombre)')}</b><div class="tiny">${esc(s.nombre)}${s.via ? ' · ' + esc(s.via) : ''}</div></td>
+    <td><span class="app" style="font-weight:600"><span class="dot" style="background:${COL[s.app]}"></span>${s.app}</span></td><td>${plan(s.meses)}</td>
+    <td class="n">${s.monto != null ? clp(s.monto) : '—'}</td><td style="white-space:nowrap">${fCorta(s.vence)} ${s.vence.slice(0, 4)}</td>
+    <td><span class="pill ${s.estado}">${{ activo: 'Activo', vencido: 'Vencido', prueba: 'En prueba' }[s.estado]}</span></td></tr>`).join('');
+}
+$('tSubs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filtroSubs = b.dataset.f; $('tSubs').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); tablaSubs(); });
+$('sApp').addEventListener('change', tablaSubs);
+
+function graficoIngresos() {
+  const h = D.ingresos.historial || {}, meses = [];
+  const [y, m] = D.rangos.hoy.split('-').map(Number);
+  for (let i = 5; i >= 0; i--) { const d = new Date(y, m - 1 - i, 1); meses.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')); }
+  const data = meses.map(k => ({ k, label: MES[+k.slice(5) - 1], titulo: MES[+k.slice(5) - 1] + ' ' + k.slice(0, 4), vals: { Ingresos: h[k] || 0 } }));
+  barras($('chIng'), data, ['Ingresos'], ['var(--c1)'], { money: true, h: 170, etiquetas: 6, aria: 'Ingresos por mes' });
+  leyenda($('legIng'), [['Pagos aprobados (Mercado Pago) + transferencias confirmadas', 'var(--c1)']]);
+}
+
+function reservas() {
+  $('tbRes').innerHTML = APPS.map(a => { const r = D.apps[a].reservas; return `<tr><td><span class="app" style="font-weight:600"><span class="dot" style="background:${COL[a]}"></span>${NOMBRE[a]}</span></td><td class="n">${r.hoy}</td><td class="n">${r.semana}</td><td class="n">${r.mes}</td><td class="n">${r.d30}</td><td class="n">${r.negocios30} de ${D.apps[a].total}</td><td class="n">${r.total}</td></tr>`; }).join('');
+  const t = D.topReservas || [], max = Math.max(1, ...t.map(x => x.n));
+  $('topRes').innerHTML = t.length ? t.map(x => `<div class="bar-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(x.negocio)}">${esc(x.negocio)}</span><span class="tr"><i style="width:${x.n / max * 100}%;background:${COL[x.app]}"></i></span><span class="n">${x.n}</span></div>`).join('')
+    : '<div class="empty">Sin reservas por enlace en los últimos 30 días.</div>';
+}
+
+function visitas() {
+  const v = D.visitas;
+  $('vHoy').textContent = fmt(v.hoy); $('vSem').textContent = fmt(v.semana); $('vMes').textContent = fmt(v.mes);
+  const toques = (v.eventos || {})['descargar·instalar'] || 0, inst = (v.eventos || {})['descargar·instalada'] || 0;
+  $('vInst').textContent = fmt(toques);
+  $('vInstS').textContent = (v.mes ? Math.round(toques / v.mes * 100) + '% de las visitas' : '') + (inst ? ' · ' + inst + ' instaladas' : '');
+  const ds = dias(30);
+  barras($('chVis'), ds.map(f => ({ k: f, label: fCorta(f), vals: { Visitas: v.diario[f] || 0 } })), ['Visitas'], ['var(--c1)'], { h: 160, aria: 'Visitas por día, 30 días' });
+  const fu = Object.entries(v.fuentes || {}).sort((a, b) => b[1] - a[1]), max = Math.max(1, ...fu.map(x => x[1]));
+  const nom = { tiktok: 'TikTok', instagram: 'Instagram', facebook: 'Facebook', whatsapp: 'WhatsApp', google: 'Google', directo: 'Directo / sin origen' };
+  $('fuentes').innerHTML = fu.length ? fu.map(([k, n]) => `<div class="bar-row"><span>${esc(nom[k] || k)}</span><span class="tr"><i style="width:${n / max * 100}%;background:var(--c1)"></i></span><span class="n">${n}</span></div>`).join('')
+    : '<div class="empty">Aún no hay visitas registradas este mes.</div>';
+}
+
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (D && !$('app').classList.contains('hide')) { graficoNuevos(); graficoIngresos(); visitas(); } }, 200); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => { });
+inicio();
+</script>
+</body>
+</html>
