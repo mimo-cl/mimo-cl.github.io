@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Descarga Mimo · Agenda de belleza</title>
+<meta name="description" content="Descarga Mimo gratis: tus clientas reservan solas, recordatorios por WhatsApp, catálogo con fotos y caja del día. 30 días gratis.">
+<meta property="og:title" content="Descarga Mimo · 30 días gratis">
+<meta property="og:description" content="La agenda de belleza donde tus clientas reservan solas. Para uñas, pestañas, peluquería, masajes, faciales y spa.">
+<meta property="og:image" content="https://mimo-cl.github.io/og.jpg">
+<meta property="og:url" content="https://mimo-cl.github.io/descargar">
+<meta name="theme-color" content="#f6a9c8">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--plum:#d24f8b;--acc:#5aa7dc;--ink:#4a3a4f;--muted:#8a7a8f;--soft:#fde4ef;--line:#f3dbe8}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.5;min-height:100vh;
+ background:radial-gradient(80% 40% at 0 0,#b6daf6,transparent 70%),radial-gradient(80% 40% at 100% 0,#f9bcd6,transparent 70%),radial-gradient(70% 40% at 50% 100%,#f9bcd6,transparent 70%),repeating-linear-gradient(135deg,rgba(210,79,139,.04) 0 1.5px,transparent 1.5px 13px),#fbf7fb}
+main{max-width:460px;margin:0 auto;padding:34px 18px 50px;text-align:center}
+.ic{width:112px;height:112px;border-radius:32px;box-shadow:0 18px 36px -14px var(--plum)}
+h1{font-family:Georgia,serif;font-size:44px;margin:16px 0 0;background:linear-gradient(90deg,var(--plum),#8a6fd0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);margin:4px 0 18px;font-size:17px}
+.badge{display:inline-block;background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:700;font-size:14px;color:var(--plum);margin-bottom:18px}
+.card{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(140deg,#f6a9c8,#a9d6f2) border-box;border:1.5px solid transparent;border-radius:24px;padding:18px;margin:14px 0;box-shadow:0 16px 30px -22px var(--plum);text-align:left}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px;border-radius:18px;border:0;font-size:18px;font-weight:800;color:#fff;text-decoration:none;cursor:pointer;
+ background:linear-gradient(135deg,var(--plum),color-mix(in srgb,var(--plum) 50%,var(--acc)));box-shadow:0 12px 24px -10px var(--plum)}
+.btn.sec{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:0 8px 16px -12px var(--plum);font-size:16px;margin-top:10px}
+ol{margin:10px 0 0;padding-left:22px}li{margin:7px 0}
+.muted{color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:8px;justify-content:center;margin:8px 0 4px}
+.tabs button{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font-weight:700;color:var(--muted);cursor:pointer}
+.tabs button.on{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--plum),#a77fd6)}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.feat div{background:var(--soft);border-radius:14px;padding:10px;font-size:14px;font-weight:600}
+#qr{display:inline-block;background:#fff;padding:12px;border-radius:18px;margin:10px 0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+<img class="ic" src="icon-512.png" alt="Mimo">
+<h1>Mimo</h1>
+<p class="sub">La agenda de belleza donde tus clientas reservan solas</p>
+<span class="badge">✨ 30 días gratis · sin tarjeta</span>
+
+<div class="tabs"><button id="tA" onclick="ver('a')">🤖 Android</button><button id="tI" onclick="ver('i')">🍎 iPhone</button></div>
+
+<div id="vA" class="card">
+ <a class="btn" href="app/Mimo.apk" download="Mimo.apk">⬇️ Descargar Mimo para Android</a>
+ <ol>
+  <li>Toca <b>Descargar</b> y abre el archivo <b>Mimo.apk</b>.</li>
+  <li>Si te lo pide, toca <b>Configuración</b> → activa <b>"Permitir de esta fuente"</b>.</li>
+  <li>Toca <b>Instalar</b>. ¡Lista! 💅</li>
+ </ol>
+ <a class="btn sec" href="./">O úsala sin descargar (desde Chrome)</a>
+</div>
+
+<div id="vI" class="card hide">
+ <ol>
+  <li>Abre este enlace en <b>Safari</b> (no en Instagram ni TikTok).</li>
+  <li>Toca <b>Compartir</b> <span style="font-size:18px">⬆️</span> abajo.</li>
+  <li>Elige <b>"Agregar a inicio"</b> y toca <b>Agregar</b>. ¡Queda como app! 💅</li>
+ </ol>
+ <a class="btn" href="./" style="margin-top:14px">Abrir Mimo</a>
+ <button class="btn sec" onclick="copiar()">Copiar enlace para Safari</button>
+</div>
+
+<div id="vD" class="card hide" style="text-align:center">
+ <b>Escanéalo con tu celular</b>
+ <div><div id="qr"></div></div>
+ <p class="muted">O abre <b>mimo-cl.github.io/descargar</b> en tu teléfono.</p>
+</div>
+
+<div class="card">
+ <b>Lo que hace Mimo por ti</b>
+ <div class="feat"><div>📅 Reservas solas 24/7</div><div>💬 Recordatorios por WhatsApp</div><div>📸 Catálogo con fotos</div><div>💰 Caja del día y del mes</div><div>🎂 Ficha y cumpleaños</div><div>📣 Historias para redes</div></div>
+</div>
+<p class="muted">Para uñas, pestañas, peluquería, masajes, depilación, faciales y spa.<br><a href="privacidad.html" style="color:var(--plum)">Privacidad y seguridad</a></p>
+</main>
+<script>
+const ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&'ontouchend' in document),and=/Android/.test(ua),movil=ios||and;
+function ver(k){document.getElementById('vA').classList.toggle('hide',k!=='a');document.getElementById('vI').classList.toggle('hide',k!=='i');document.getElementById('tA').classList.toggle('on',k==='a');document.getElementById('tI').classList.toggle('on',k==='i')}
+function copiar(){navigator.clipboard.writeText('https://mimo-cl.github.io/descargar').then(()=>alertita('Enlace copiado: pégalo en Safari')).catch(()=>{})}
+function alertita(t){const d=document.createElement('div');d.textContent=t;d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#4a3a4f;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:9';document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+ver(ios?'i':'a');
+if(!movil){document.getElementById('vD').classList.remove('hide');const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=()=>new QRCode(document.getElementById('qr'),{text:'https://mimo-cl.github.io/descargar',width:180,height:180});document.head.appendChild(s)}
+</script>
+</body>
+</html>
